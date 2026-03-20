@@ -1,5 +1,42 @@
 const BASE_URL = "/api/v1";
 
+function parseNumericStrings(obj) {
+  if (Array.isArray(obj)) return obj.map(parseNumericStrings);
+  if (obj && typeof obj === "object") {
+    const result = {};
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === "string" && v !== "" && !isNaN(v) && !k.toLowerCase().includes("id") && !k.includes("fecha") && !k.includes("date") && !k.includes("purchase") && !k.includes("nombre")) {
+        result[k] = Number(v);
+      } else if (typeof v === "object" && v !== null) {
+        result[k] = parseNumericStrings(v);
+      } else {
+        result[k] = v;
+      }
+    }
+    return result;
+  }
+  return obj;
+}
+
+async function fetchJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(
+      body?.detail || body?.message || `Error ${response.status}: ${response.statusText}`
+    );
+  }
+  const data = await response.json();
+  return parseNumericStrings(data);
+}
+
+function buildParams(params) {
+  const entries = Object.entries(params).filter(([, v]) => v != null);
+  if (entries.length === 0) return "";
+  return "?" + new URLSearchParams(entries).toString();
+}
+
+// Upload endpoints
 export async function uploadTransactions(file) {
   const formData = new FormData();
   formData.append("file", file);
@@ -20,14 +57,53 @@ export async function uploadTransactions(file) {
 }
 
 export async function getJobStatus(jobId) {
-  const response = await fetch(`${BASE_URL}/jobs/${jobId}`);
+  return fetchJSON(`${BASE_URL}/jobs/${jobId}`);
+}
 
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new Error(
-      body?.detail || body?.message || `Error ${response.status}: ${response.statusText}`
-    );
-  }
+// Sales endpoints
+export async function getSalesTotal(fechaInicio, fechaFin) {
+  const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
+  return fetchJSON(`${BASE_URL}/sales/total${params}`);
+}
 
-  return response.json();
+export async function getMonthlyTrend() {
+  return fetchJSON(`${BASE_URL}/sales/monthly-trend`);
+}
+
+// Analytics endpoints
+export async function getDepartments(fechaInicio, fechaFin) {
+  const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
+  return fetchJSON(`${BASE_URL}/analytics/departments${params}`);
+}
+
+export async function getSections() {
+  return fetchJSON(`${BASE_URL}/analytics/sections`);
+}
+
+export async function getTopProductsByQuantity(limit) {
+  const params = buildParams({ limit });
+  return fetchJSON(`${BASE_URL}/analytics/products/top-quantity${params}`);
+}
+
+export async function getTopProductsByRevenue(limit) {
+  const params = buildParams({ limit });
+  return fetchJSON(`${BASE_URL}/analytics/products/top-revenue${params}`);
+}
+
+export async function getTopCustomers(limit) {
+  const params = buildParams({ limit });
+  return fetchJSON(`${BASE_URL}/analytics/customers/top${params}`);
+}
+
+export async function getCustomerAverageSpend() {
+  return fetchJSON(`${BASE_URL}/analytics/customers/average-spend`);
+}
+
+export async function getOrdersCount(fechaInicio, fechaFin) {
+  const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
+  return fetchJSON(`${BASE_URL}/analytics/orders/count${params}`);
+}
+
+export async function getOrdersAverageValue() {
+  return fetchJSON(`${BASE_URL}/analytics/orders/average-value`);
 }

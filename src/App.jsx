@@ -5,6 +5,10 @@ import Sidebar from "./components/layout/Sidebar";
 import SalesDashboard from "./pages/SalesDashboard";
 import AssociationDashboard from "./pages/AssociationDashboard";
 import UploadTransactionsPage from "./pages/UploadTransactionsPage";
+import AnalyticsOverview from "./pages/AnalyticsOverview";
+import ProductInsights from "./pages/ProductInsights";
+import CustomerInsights from "./pages/CustomerInsights";
+import OrdersInsights from "./pages/OrdersInsights";
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -34,6 +38,10 @@ export default function App() {
             path="/upload-transactions"
             element={<UploadTransactionsPage />}
           />
+          <Route path="/analytics-overview" element={<AnalyticsOverview />} />
+          <Route path="/products-insights" element={<ProductInsights />} />
+          <Route path="/customers-insights" element={<CustomerInsights />} />
+          <Route path="/orders-insights" element={<OrdersInsights />} />
           <Route path="*" element={<Navigate to="/sales-dashboard" replace />} />
         </Routes>
       </DashboardLayout>
