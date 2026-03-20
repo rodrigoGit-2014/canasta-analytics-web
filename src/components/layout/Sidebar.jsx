@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { CATEGORY_LIST } from "../../data/categories";
-import { BarChart3, Network } from "lucide-react";
+import { BarChart3, Network, Upload } from "lucide-react";
 
 const NAV_ITEMS = [
   {
@@ -12,6 +12,11 @@ const NAV_ITEMS = [
     path: "/association-rules",
     label: "Asociaciones",
     icon: Network,
+  },
+  {
+    path: "/upload-transactions",
+    label: "Cargar Datos",
+    icon: Upload,
   },
 ];
 

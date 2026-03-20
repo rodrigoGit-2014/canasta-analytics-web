@@ -4,6 +4,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 import Sidebar from "./components/layout/Sidebar";
 import SalesDashboard from "./pages/SalesDashboard";
 import AssociationDashboard from "./pages/AssociationDashboard";
+import UploadTransactionsPage from "./pages/UploadTransactionsPage";
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -28,6 +29,10 @@ export default function App() {
             element={
               <AssociationDashboard selectedCategory={selectedCategory} />
             }
+          />
+          <Route
+            path="/upload-transactions"
+            element={<UploadTransactionsPage />}
           />
           <Route path="*" element={<Navigate to="/sales-dashboard" replace />} />
         </Routes>
