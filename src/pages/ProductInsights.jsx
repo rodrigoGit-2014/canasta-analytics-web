@@ -2,37 +2,38 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import useProductInsights from "../hooks/useProductInsights";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
-import HorizontalBarChart from "../components/charts/HorizontalBarChart";
-import DataTable from "../components/tables/DataTable";
+import TopProductsChart from "../components/charts/TopProductsChart";
+import TopRevenueChart from "../components/charts/TopRevenueChart";
+import ProductRankingTable from "../components/tables/ProductRankingTable";
 import LimitSelector from "../components/filters/LimitSelector";
+import DateRangeFilter from "../components/filters/DateRangeFilter";
 import KPISkeleton from "../components/skeletons/KPISkeleton";
 import ChartSkeleton from "../components/skeletons/ChartSkeleton";
 import TableSkeleton from "../components/skeletons/TableSkeleton";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 
-const TABLE_COLUMNS = [
-  { key: "_rank", label: "#", format: (_, row) => row._rank },
-  { key: "nombre_producto", label: "Producto" },
-  { key: "total_quantity", label: "Cantidad", align: "right", format: (v) => formatNumber(v) },
-  { key: "total_revenue", label: "Revenue", align: "right", format: (v) => formatCurrency(v) },
-  { key: "avg_unit_price", label: "Precio Medio", align: "right", format: (v) => formatCurrency(v) },
-];
-
 export default function ProductInsights() {
   const [limit, setLimit] = useState(10);
+  const [dateRange, setDateRange] = useState({
+    start: "2023-01-01",
+    end: new Date().toISOString().split("T")[0],
+  });
   const { kpis, topByQuantity, topByRevenue, loading, error } =
-    useProductInsights(limit);
+    useProductInsights(limit, dateRange);
 
   const tableData = topByRevenue.map((p, i) => ({ ...p, _rank: i + 1 }));
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
         <div>
-          <h1 className="text-xl font-bold text-white">Insights de Productos</h1>
-          <p className="text-sm text-slate-500">Top productos por cantidad y revenue</p>
+          <h1 className="text-lg font-bold text-white">Insights de Productos</h1>
+          <p className="text-xs text-slate-500">Top productos por cantidad y revenue</p>
         </div>
-        <LimitSelector value={limit} onChange={setLimit} />
+        <div className="flex items-center gap-4 flex-wrap">
+          <DateRangeFilter dateRange={dateRange} onDateRangeChange={setDateRange} />
+          <LimitSelector value={limit} onChange={setLimit} />
+        </div>
       </div>
 
       {error && (
@@ -52,31 +53,15 @@ export default function ProductInsights() {
           <TableSkeleton rows={5} columns={5} />
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-2">
           <GenericKPIRow items={kpis} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <HorizontalBarChart
-              title="Top Productos por Cantidad"
-              data={topByQuantity}
-              dataKey="total_quantity"
-              nameKey="nombre_producto"
-              color="#10B981"
-              formatter={(v) => formatNumber(v)}
-              tooltipLabel="Cantidad"
-            />
-            <HorizontalBarChart
-              title="Top Productos por Revenue"
-              data={topByRevenue}
-              dataKey="total_revenue"
-              nameKey="nombre_producto"
-              color="#3B82F6"
-              formatter={(v) => formatCurrency(v)}
-              tooltipLabel="Revenue"
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <TopProductsChart data={topByQuantity} />
+            <TopRevenueChart data={topByRevenue} />
           </div>
 
-          <DataTable columns={TABLE_COLUMNS} data={tableData} />
+          <ProductRankingTable data={tableData} />
         </div>
       )}
     </>

@@ -4,7 +4,7 @@ import useAnalyticsOverview from "../hooks/useAnalyticsOverview";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
 import TrendLineChart from "../components/charts/TrendLineChart";
 import DonutChart from "../components/charts/DonutChart";
-import HorizontalBarChart from "../components/charts/HorizontalBarChart";
+import SectionsByDepartment from "../components/charts/SectionsByDepartment";
 import DateRangeFilter from "../components/filters/DateRangeFilter";
 import KPISkeleton from "../components/skeletons/KPISkeleton";
 import ChartSkeleton from "../components/skeletons/ChartSkeleton";
@@ -20,15 +20,21 @@ export default function AnalyticsOverview() {
 
   const donutData = departments.map((d, i) => {
     const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#EC4899", "#14B8A6", "#F97316"];
-    return { name: d.id_departamento, value: d.total_sales, color: colors[i % colors.length] };
+    return {
+      name: `Depto ${d.id_departamento}`,
+      value: d.total_sales,
+      order_count: d.order_count,
+      percentage: d.percentage_of_total,
+      color: colors[i % colors.length],
+    };
   });
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
         <div>
-          <h1 className="text-xl font-bold text-white">Resumen Analítico</h1>
-          <p className="text-sm text-slate-500">Vista general de métricas clave del negocio</p>
+          <h1 className="text-lg font-bold text-white">Resumen Analítico</h1>
+          <p className="text-xs text-slate-500">Vista general de métricas clave del negocio</p>
         </div>
         <DateRangeFilter dateRange={dateRange} onDateRangeChange={setDateRange} />
       </div>
@@ -50,18 +56,20 @@ export default function AnalyticsOverview() {
           <ChartSkeleton height={300} />
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-3">
           <GenericKPIRow items={kpis} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <TrendLineChart
-              title="Tendencia Mensual de Ventas"
-              data={monthlyTrend}
-              lines={[
-                { dataKey: "total_sales", color: "#3B82F6", name: "Ventas" },
-              ]}
-              tooltipFormatter={(val, name) => [formatCurrency(val), name]}
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <div className="lg:col-span-2">
+              <TrendLineChart
+                title="Tendencia Mensual de Ventas"
+                data={monthlyTrend}
+                lines={[
+                  { dataKey: "total_sales", color: "#3B82F6", name: "Ventas" },
+                ]}
+                tooltipFormatter={(val, name) => [formatCurrency(val), name]}
+              />
+            </div>
             <DonutChart
               title="Ventas por Departamento"
               data={donutData}
@@ -69,15 +77,7 @@ export default function AnalyticsOverview() {
           </div>
 
           {sections.length > 0 && (
-            <HorizontalBarChart
-              title="Ventas por Sección"
-              data={sections}
-              dataKey="total_sales"
-              nameKey="id_seccion"
-              color="#8B5CF6"
-              formatter={(v) => formatCurrency(v)}
-              tooltipLabel="Ventas"
-            />
+            <SectionsByDepartment data={sections} />
           )}
         </div>
       )}

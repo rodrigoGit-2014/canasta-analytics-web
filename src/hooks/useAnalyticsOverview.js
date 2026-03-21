@@ -36,7 +36,7 @@ export default function useAnalyticsOverview(dateRange) {
       getSalesTotal(start, end),
       getMonthlyTrend(start, end),
       getDepartments(start, end),
-      getSections(),
+      getSections(start, end),
     ])
       .then(([sales, trend, deps, secs]) => {
         if (cancelled) return;

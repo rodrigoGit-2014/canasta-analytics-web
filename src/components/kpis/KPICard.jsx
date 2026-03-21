@@ -1,6 +1,6 @@
 export default function KPICard({ title, value, icon: Icon, color }) {
   return (
-    <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-5 animate-fade-in-up hover:border-[#2a3347] transition-all duration-300 group">
+    <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-4 animate-fade-in-up hover:border-[#2a3347] transition-all duration-300 group">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">

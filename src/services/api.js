@@ -77,17 +77,18 @@ export async function getDepartments(fechaInicio, fechaFin) {
   return fetchJSON(`${BASE_URL}/analytics/departments${params}`);
 }
 
-export async function getSections() {
-  return fetchJSON(`${BASE_URL}/analytics/sections`);
+export async function getSections(fechaInicio, fechaFin) {
+  const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
+  return fetchJSON(`${BASE_URL}/analytics/sections${params}`);
 }
 
-export async function getTopProductsByQuantity(limit) {
-  const params = buildParams({ limit });
+export async function getTopProductsByQuantity(limit, fechaInicio, fechaFin) {
+  const params = buildParams({ limit, fecha_inicio: fechaInicio, fecha_fin: fechaFin });
   return fetchJSON(`${BASE_URL}/analytics/products/top-quantity${params}`);
 }
 
-export async function getTopProductsByRevenue(limit) {
-  const params = buildParams({ limit });
+export async function getTopProductsByRevenue(limit, fechaInicio, fechaFin) {
+  const params = buildParams({ limit, fecha_inicio: fechaInicio, fecha_fin: fechaFin });
   return fetchJSON(`${BASE_URL}/analytics/products/top-revenue${params}`);
 }
 

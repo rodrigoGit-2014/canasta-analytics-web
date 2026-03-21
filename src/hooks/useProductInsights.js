@@ -3,11 +3,17 @@ import { getTopProductsByQuantity, getTopProductsByRevenue } from "../services/a
 import { formatCurrency, formatNumber } from "../utils/formatters";
 import { TrendingUp, Package, LayoutGrid } from "lucide-react";
 
-export default function useProductInsights(limit) {
+const DEFAULT_START = "2023-01-01";
+const DEFAULT_END = new Date().toISOString().split("T")[0];
+
+export default function useProductInsights(limit, dateRange) {
   const [topByQuantity, setTopByQuantity] = useState([]);
   const [topByRevenue, setTopByRevenue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const start = dateRange?.start || DEFAULT_START;
+  const end = dateRange?.end || DEFAULT_END;
 
   useEffect(() => {
     let cancelled = false;
@@ -15,8 +21,8 @@ export default function useProductInsights(limit) {
     setError(null);
 
     Promise.all([
-      getTopProductsByQuantity(limit),
-      getTopProductsByRevenue(limit),
+      getTopProductsByQuantity(limit, start, end),
+      getTopProductsByRevenue(limit, start, end),
     ])
       .then(([qty, rev]) => {
         if (cancelled) return;
@@ -31,21 +37,21 @@ export default function useProductInsights(limit) {
       });
 
     return () => { cancelled = true; };
-  }, [limit]);
+  }, [limit, start, end]);
 
   const kpis = useMemo(() => {
-    const topRev = topByRevenue[0];
-    const topQty = topByQuantity[0];
+    const totalRevenue = topByRevenue.reduce((sum, p) => sum + (p.total_revenue || 0), 0);
+    const totalQuantity = topByQuantity.reduce((sum, p) => sum + (p.total_quantity || 0), 0);
     return [
       {
-        title: "Top Revenue",
-        value: topRev ? formatCurrency(topRev.total_revenue) : "—",
+        title: "Total Revenue",
+        value: "$ " + formatNumber(Math.round(totalRevenue)),
         icon: TrendingUp,
         color: "#3B82F6",
       },
       {
-        title: "Top Cantidad",
-        value: topQty ? formatNumber(topQty.total_quantity) : "—",
+        title: "Total Cantidad",
+        value: formatNumber(totalQuantity),
         icon: Package,
         color: "#10B981",
       },

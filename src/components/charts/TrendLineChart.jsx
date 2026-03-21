@@ -29,8 +29,8 @@ export default function TrendLineChart({
 }) {
   return (
     <ChartCard title={title}>
-      <ResponsiveContainer width="100%" height={280}>
-        <LineChart data={data}>
+      <ResponsiveContainer width="100%" height={200}>
+        <LineChart data={data} margin={{ bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
           <XAxis
             dataKey={xKey}
