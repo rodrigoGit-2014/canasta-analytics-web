@@ -26,16 +26,16 @@ export default function DataTable({ columns, data, maxHeight = "24rem" }) {
     : data;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 animate-fade-in-up overflow-hidden">
+    <div className="bg-[#151721] rounded-xl border border-[#1e2433] animate-fade-in-up overflow-hidden">
       <div className="overflow-auto custom-scrollbar" style={{ maxHeight }}>
         <table className="w-full">
-          <thead className="sticky top-0 bg-gray-50 z-10">
+          <thead className="sticky top-0 bg-[#1a1f2e] z-10">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => handleSort(col.key)}
-                  className={`px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-gray-600 transition-colors ${
+                  className={`px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide cursor-pointer hover:text-slate-300 transition-colors ${
                     col.align === "right" ? "text-right" : "text-left"
                   }`}
                 >
@@ -55,12 +55,12 @@ export default function DataTable({ columns, data, maxHeight = "24rem" }) {
             {sortedData.map((row, i) => (
               <tr
                 key={i}
-                className="border-t border-gray-50 hover:bg-gray-50 transition-colors duration-150"
+                className="border-t border-[#1e2433] hover:bg-[#1a1f2e] transition-colors duration-150"
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`px-4 py-3 text-sm text-gray-700 ${
+                    className={`px-4 py-3 text-sm text-slate-300 ${
                       col.align === "right" ? "text-right" : "text-left"
                     }`}
                   >

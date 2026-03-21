@@ -5,26 +5,26 @@ const STATUS_CONFIG = {
   pending: {
     icon: Clock,
     label: "En cola",
-    badgeClass: "bg-amber-100 text-amber-700",
+    badgeClass: "bg-amber-500/15 text-amber-400",
     iconClass: "text-amber-500",
   },
   processing: {
     icon: Loader,
     label: "Procesando",
-    badgeClass: "bg-blue-100 text-blue-700",
+    badgeClass: "bg-blue-500/15 text-blue-400",
     iconClass: "text-blue-500",
     spin: true,
   },
   completed: {
     icon: CheckCircle2,
     label: "Completado",
-    badgeClass: "bg-green-100 text-green-700",
+    badgeClass: "bg-green-500/15 text-green-400",
     iconClass: "text-green-500",
   },
   failed: {
     icon: AlertCircle,
     label: "Error",
-    badgeClass: "bg-red-100 text-red-700",
+    badgeClass: "bg-red-500/15 text-red-400",
     iconClass: "text-red-500",
   },
 };
@@ -41,13 +41,12 @@ function formatTimestamp(ts) {
 export default function JobStatus({ job, error }) {
   if (!job && !error) return null;
 
-  // Error without job data
   if (error && !job) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-red-200 p-5 animate-fade-in-up">
+      <div className="bg-[#151721] rounded-xl border border-red-500/20 p-5 animate-fade-in-up">
         <div className="flex items-center gap-3">
-          <AlertCircle size={20} className="text-red-500" />
-          <p className="text-sm text-red-700">{error}</p>
+          <AlertCircle size={20} className="text-red-400" />
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       </div>
     );
@@ -57,8 +56,7 @@ export default function JobStatus({ job, error }) {
   const Icon = config.icon;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 space-y-4 animate-fade-in-up">
-      {/* Header */}
+    <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-5 space-y-4 animate-fade-in-up">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Icon
@@ -66,10 +64,10 @@ export default function JobStatus({ job, error }) {
             className={`${config.iconClass} ${config.spin ? "animate-spin" : ""}`}
           />
           <div>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-white">
               {job.filename || "Archivo"}
             </p>
-            <p className="text-xs text-gray-400">ID: {job.id}</p>
+            <p className="text-xs text-slate-500">ID: {job.id}</p>
           </div>
         </div>
         <span
@@ -79,30 +77,27 @@ export default function JobStatus({ job, error }) {
         </span>
       </div>
 
-      {/* Processing: progress bar + rows */}
       {job.status === "processing" && (
         <div className="space-y-2">
           <ProgressBar percentage={job.progress_percentage || 0} status="processing" />
           {job.total_rows > 0 && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500">
               {(job.processed_rows || 0).toLocaleString()} / {job.total_rows.toLocaleString()} filas procesadas
             </p>
           )}
         </div>
       )}
 
-      {/* Pending message */}
       {job.status === "pending" && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-500">
           El archivo está en cola de procesamiento...
         </p>
       )}
 
-      {/* Completed */}
       {job.status === "completed" && (
         <div className="space-y-2">
           <ProgressBar percentage={100} status="completed" />
-          <div className="text-sm text-green-700 bg-green-50 rounded-lg p-3">
+          <div className="text-sm text-green-400 bg-green-500/10 rounded-lg p-3 border border-green-500/20">
             <p className="font-medium">Procesamiento completado</p>
             {job.total_rows > 0 && (
               <p className="text-xs mt-1">
@@ -110,7 +105,7 @@ export default function JobStatus({ job, error }) {
               </p>
             )}
             {job.completed_at && (
-              <p className="text-xs mt-1 text-green-600">
+              <p className="text-xs mt-1 text-green-500">
                 Finalizado: {formatTimestamp(job.completed_at)}
               </p>
             )}
@@ -118,9 +113,8 @@ export default function JobStatus({ job, error }) {
         </div>
       )}
 
-      {/* Failed */}
       {job.status === "failed" && (
-        <div className="text-sm text-red-700 bg-red-50 rounded-lg p-3">
+        <div className="text-sm text-red-400 bg-red-500/10 rounded-lg p-3 border border-red-500/20">
           <p className="font-medium">El procesamiento falló</p>
           <p className="text-xs mt-1">
             {job.error_message || error || "Error desconocido"}

@@ -39,7 +39,7 @@ export default function ProductSearch({
         <div className="relative flex-1">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
           />
           <input
             type="text"
@@ -51,12 +51,12 @@ export default function ProductSearch({
             }}
             onFocus={() => setOpen(true)}
             placeholder="Buscar producto..."
-            className="w-full pl-9 pr-8 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full pl-9 pr-8 py-2 text-sm border border-[#1e2433] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-[#1a1f2e] text-slate-200 placeholder-slate-500"
           />
           {(selectedProduct || query) && (
             <button
               onClick={handleClear}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-gray-100 text-gray-400"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-[#252d3d] text-slate-500"
             >
               <X size={14} />
             </button>
@@ -65,9 +65,9 @@ export default function ProductSearch({
       </div>
 
       {open && !selectedProduct && (
-        <div className="absolute z-30 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
+        <div className="absolute z-30 mt-1 w-full bg-[#1a1f2e] border border-[#1e2433] rounded-lg shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
           {filtered.length === 0 ? (
-            <p className="px-3 py-2 text-sm text-gray-400">
+            <p className="px-3 py-2 text-sm text-slate-500">
               Sin resultados
             </p>
           ) : (
@@ -75,7 +75,7 @@ export default function ProductSearch({
               <button
                 key={p}
                 onClick={() => handleSelect(p)}
-                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-blue-600/15 hover:text-blue-400 transition-colors"
               >
                 {p}
               </button>

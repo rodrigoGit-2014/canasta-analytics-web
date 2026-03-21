@@ -42,16 +42,16 @@ export default function Sidebar({ selectedCategory, onSelectCategory }) {
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-5 border-b border-gray-100">
+      <div className="p-5 border-b border-[#1e2433]">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
             <BarChart3 size={18} className="text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-gray-900 leading-tight">
+            <h1 className="text-sm font-bold text-white leading-tight">
               Sano Fresco
             </h1>
-            <p className="text-xs text-gray-400">Analytics Dashboard</p>
+            <p className="text-xs text-slate-500">Analytics Dashboard</p>
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@ export default function Sidebar({ selectedCategory, onSelectCategory }) {
       <div className="px-3 pt-3 overflow-y-auto flex-1 custom-scrollbar">
         {NAV_SECTIONS.map((section) => (
           <div key={section.label} className="mb-3">
-            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -73,8 +73,8 @@ export default function Sidebar({ selectedCategory, onSelectCategory }) {
                     onClick={() => navigate(item.path)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        ? "bg-blue-600/15 text-blue-400 border border-blue-500/20"
+                        : "text-slate-400 hover:bg-[#1e2433] hover:text-slate-200 border border-transparent"
                     }`}
                   >
                     <Icon size={16} />
@@ -88,7 +88,7 @@ export default function Sidebar({ selectedCategory, onSelectCategory }) {
 
         {/* Categories */}
         <div className="mb-3">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">
+          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
             Categorias
           </p>
           <ul className="space-y-0.5">
@@ -101,18 +101,18 @@ export default function Sidebar({ selectedCategory, onSelectCategory }) {
                     onClick={() => onSelectCategory(cat.id)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-50 text-blue-700 shadow-sm"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        ? "bg-[#1e2433] text-white"
+                        : "text-slate-400 hover:bg-[#1e2433] hover:text-slate-200"
                     }`}
                   >
                     <div
                       className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200 ${
-                        isActive ? "bg-blue-100" : "bg-gray-100"
+                        isActive ? "bg-[#252d3d]" : "bg-[#1a1f2e]"
                       }`}
                     >
                       <Icon
                         size={16}
-                        style={{ color: isActive ? cat.color : "#9CA3AF" }}
+                        style={{ color: isActive ? cat.color : "#64748b" }}
                       />
                     </div>
                     <span>{cat.label}</span>

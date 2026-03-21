@@ -30,14 +30,14 @@ export default function CustomerInsights() {
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Insights de Clientes</h1>
-          <p className="text-sm text-gray-500">Análisis de comportamiento de clientes</p>
+          <h1 className="text-xl font-bold text-white">Insights de Clientes</h1>
+          <p className="text-sm text-slate-500">Análisis de comportamiento de clientes</p>
         </div>
         <LimitSelector value={limit} onChange={setLimit} />
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-700">
+        <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 text-sm text-red-400">
           <AlertCircle size={16} />
           {error}
         </div>

@@ -4,7 +4,6 @@ import {
   getMonthlyTrend,
   getDepartments,
   getSections,
-  getCustomerAverageSpend,
 } from "../services/api";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 import { DollarSign, ShoppingCart, Receipt, Users } from "lucide-react";
@@ -22,7 +21,6 @@ export default function useAnalyticsOverview(dateRange) {
   const [monthlyTrend, setMonthlyTrend] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [sections, setSections] = useState([]);
-  const [totalCustomers, setTotalCustomers] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -39,9 +37,8 @@ export default function useAnalyticsOverview(dateRange) {
       getMonthlyTrend(),
       getDepartments(start, end),
       getSections(),
-      getCustomerAverageSpend(),
     ])
-      .then(([sales, trend, deps, secs, custAvg]) => {
+      .then(([sales, trend, deps, secs]) => {
         if (cancelled) return;
         setSalesTotal(sales);
         setMonthlyTrend(
@@ -52,7 +49,6 @@ export default function useAnalyticsOverview(dateRange) {
         );
         setDepartments(deps.data || []);
         setSections(secs.data || []);
-        setTotalCustomers(custAvg.total_customers || 0);
         setLoading(false);
       })
       .catch((err) => {
@@ -67,12 +63,12 @@ export default function useAnalyticsOverview(dateRange) {
   const kpis = useMemo(() => {
     if (!salesTotal) return [];
     return [
-      { title: "Ventas Totales", value: formatCurrency(salesTotal.total_sales), icon: DollarSign, color: "#3B82F6" },
+      { title: "Ventas Totales", value: "$ " + formatNumber(Math.round(salesTotal.total_sales)), icon: DollarSign, color: "#3B82F6" },
       { title: "Total Pedidos", value: formatNumber(salesTotal.total_orders), icon: ShoppingCart, color: "#F59E0B" },
-      { title: "Valor Medio Pedido", value: formatCurrency(salesTotal.average_order_value), icon: Receipt, color: "#8B5CF6" },
-      { title: "Total Clientes", value: formatNumber(totalCustomers), icon: Users, color: "#10B981" },
+      { title: "Valor Medio Pedido", value: "$ " + formatNumber(salesTotal.average_order_value, 2), icon: Receipt, color: "#8B5CF6" },
+      { title: "Total Clientes", value: formatNumber(salesTotal.total_clients), icon: Users, color: "#10B981" },
     ];
-  }, [salesTotal, totalCustomers]);
+  }, [salesTotal]);
 
   return { kpis, monthlyTrend, departments, sections, loading, error };
 }

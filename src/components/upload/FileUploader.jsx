@@ -25,7 +25,6 @@ export default function FileUploader({ onFileSelect, disabled = false, currentFi
     e.preventDefault();
     setDragActive(false);
     if (disabled) return;
-
     const file = e.dataTransfer.files[0];
     if (file) validateAndSelect(file);
   };
@@ -47,47 +46,47 @@ export default function FileUploader({ onFileSelect, disabled = false, currentFi
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up">
+    <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-6 animate-fade-in-up">
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors duration-200 ${
           disabled
-            ? "border-gray-200 bg-gray-50 opacity-60 pointer-events-none"
+            ? "border-[#1e2433] bg-[#0f1117] opacity-60 pointer-events-none"
             : dragActive
-            ? "border-blue-400 bg-blue-50"
-            : "border-gray-300 hover:border-gray-400"
+            ? "border-blue-500 bg-blue-500/10"
+            : "border-[#2a3347] hover:border-[#3a4a66]"
         }`}
       >
         {currentFile ? (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-              <FileText size={24} className="text-blue-600" />
+            <div className="w-12 h-12 rounded-xl bg-blue-500/15 flex items-center justify-center">
+              <FileText size={24} className="text-blue-400" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">{currentFile.name}</p>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-sm font-medium text-white">{currentFile.name}</p>
+              <p className="text-xs text-slate-500 mt-0.5">
                 {formatFileSize(currentFile.size)}
               </p>
             </div>
             <button
               onClick={() => inputRef.current?.click()}
-              className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+              className="text-xs text-blue-400 hover:text-blue-300 font-medium"
             >
               Cambiar archivo
             </button>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-              <Upload size={24} className="text-gray-400" />
+            <div className="w-12 h-12 rounded-xl bg-[#1e2433] flex items-center justify-center">
+              <Upload size={24} className="text-slate-500" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-700">
+              <p className="text-sm font-medium text-slate-300">
                 Arrastra tu archivo CSV aquí
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 o haz clic para seleccionar
               </p>
             </div>
@@ -110,7 +109,7 @@ export default function FileUploader({ onFileSelect, disabled = false, currentFi
       </div>
 
       {fileError && (
-        <p className="text-sm text-red-600 mt-3">{fileError}</p>
+        <p className="text-sm text-red-400 mt-3">{fileError}</p>
       )}
     </div>
   );

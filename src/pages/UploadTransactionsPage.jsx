@@ -10,20 +10,18 @@ const STORAGE_KEY = "upload_job_id";
 export default function UploadTransactionsPage() {
   const [file, setFile] = useState(null);
   const [jobId, setJobId] = useState(() => localStorage.getItem(STORAGE_KEY));
-  const [uploadStatus, setUploadStatus] = useState("idle"); // idle | uploading | polling
+  const [uploadStatus, setUploadStatus] = useState("idle");
   const [uploadError, setUploadError] = useState(null);
 
   const pollingEnabled = uploadStatus === "polling" || (jobId !== null && uploadStatus === "idle");
   const { job, error: pollError, isPolling } = useJobPolling(jobId, { enabled: pollingEnabled });
 
-  // Clear localStorage when job reaches terminal state
   useEffect(() => {
     if (job?.status === "completed" || job?.status === "failed") {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, [job?.status]);
 
-  // If recovered jobId and polling finishes, sync status
   useEffect(() => {
     if (jobId && !isPolling && uploadStatus === "idle") {
       setUploadStatus("polling");
@@ -32,10 +30,8 @@ export default function UploadTransactionsPage() {
 
   const handleUpload = async () => {
     if (!file) return;
-
     setUploadStatus("uploading");
     setUploadError(null);
-
     try {
       const data = await uploadTransactions(file);
       localStorage.setItem(STORAGE_KEY, data.job_id);
@@ -60,26 +56,22 @@ export default function UploadTransactionsPage() {
 
   return (
     <>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Cargar Transacciones</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-xl font-bold text-white">Cargar Transacciones</h1>
+          <p className="text-sm text-slate-500">
             Sube archivos CSV con datos de transacciones para procesamiento
           </p>
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-2xl mx-auto space-y-5">
-        {/* File uploader */}
         <FileUploader
           onFileSelect={setFile}
           disabled={isProcessing}
           currentFile={file}
         />
 
-        {/* Upload button */}
         {file && !jobId && (
           <button
             onClick={handleUpload}
@@ -100,21 +92,18 @@ export default function UploadTransactionsPage() {
           </button>
         )}
 
-        {/* Upload error */}
         {uploadError && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
             {uploadError}
           </div>
         )}
 
-        {/* Job status */}
         {jobId && <JobStatus job={job} error={pollError} />}
 
-        {/* Reset button */}
         {isTerminal && (
           <button
             onClick={handleReset}
-            className="w-full py-3 bg-white text-gray-700 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2"
+            className="w-full py-3 bg-[#151721] text-slate-300 border border-[#1e2433] rounded-xl font-medium hover:bg-[#1e2433] transition-colors duration-200 flex items-center justify-center gap-2"
           >
             <RotateCcw size={16} />
             Cargar otro archivo

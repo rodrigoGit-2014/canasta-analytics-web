@@ -1,6 +1,15 @@
 import { Treemap, ResponsiveContainer, Tooltip } from "recharts";
 import { formatNumber } from "../../utils/formatters";
 
+const TOOLTIP_STYLE = {
+  borderRadius: "8px",
+  border: "1px solid #1e2433",
+  backgroundColor: "#1a1f2e",
+  color: "#e2e8f0",
+  boxShadow: "0 4px 12px rgb(0 0 0 / 0.4)",
+  fontSize: "12px",
+};
+
 function CustomContent({ x, y, width, height, name, size, color }) {
   if (width < 4 || height < 4) return null;
 
@@ -13,8 +22,8 @@ function CustomContent({ x, y, width, height, name, size, color }) {
         height={height}
         rx={4}
         fill={color || "#3B82F6"}
-        fillOpacity={0.85}
-        stroke="#fff"
+        fillOpacity={0.8}
+        stroke="#151721"
         strokeWidth={2}
       />
       {width > 55 && height > 30 && (
@@ -35,7 +44,7 @@ function CustomContent({ x, y, width, height, name, size, color }) {
             x={x + width / 2}
             y={y + height / 2 + 10}
             textAnchor="middle"
-            fill="rgba(255,255,255,0.8)"
+            fill="rgba(255,255,255,0.7)"
             fontSize={10}
           >
             {formatNumber(size)} uds
@@ -54,8 +63,8 @@ export default function ProductTreemap({ data }) {
   }));
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 animate-fade-in-up">
-      <h3 className="text-sm font-semibold text-gray-900 mb-4">
+    <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-5 animate-fade-in-up">
+      <h3 className="text-sm font-semibold text-white mb-4">
         Unidades Vendidas por Producto
       </h3>
       <ResponsiveContainer width="100%" height={280}>
@@ -68,12 +77,8 @@ export default function ProductTreemap({ data }) {
         >
           <Tooltip
             formatter={(val) => [`${formatNumber(val)} unidades`, "Cantidad"]}
-            contentStyle={{
-              borderRadius: "8px",
-              border: "1px solid #E2E8F0",
-              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-              fontSize: "12px",
-            }}
+            contentStyle={TOOLTIP_STYLE}
+            itemStyle={{ color: "#e2e8f0" }}
           />
         </Treemap>
       </ResponsiveContainer>

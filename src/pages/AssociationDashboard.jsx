@@ -41,20 +41,20 @@ export default function AssociationDashboard({ selectedCategory }) {
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="text-xl font-bold text-white">
             Reglas de Asociacion
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Analisis de cesta de mercado - Algoritmo Apriori
           </p>
         </div>
-        <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
+        <div className="flex items-center bg-[#1a1f2e] rounded-lg p-0.5 border border-[#1e2433]">
           <button
             onClick={() => setView("graph")}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
               view === "graph"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
             <Network size={13} />
@@ -64,8 +64,8 @@ export default function AssociationDashboard({ selectedCategory }) {
             onClick={() => setView("table")}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
               view === "table"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
             <Table size={13} />
@@ -79,9 +79,9 @@ export default function AssociationDashboard({ selectedCategory }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         {/* Left: Filters */}
         <div className="space-y-4">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-fade-in-up">
-            <h4 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <BarChart3 size={14} className="text-gray-400" />
+          <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-4 animate-fade-in-up">
+            <h4 className="text-xs font-semibold text-white mb-3 flex items-center gap-2">
+              <BarChart3 size={14} className="text-slate-500" />
               Buscar Producto
             </h4>
             <ProductSearch

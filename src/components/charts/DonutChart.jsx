@@ -11,8 +11,10 @@ import ChartCard from "./ChartCard";
 
 const TOOLTIP_STYLE = {
   borderRadius: "8px",
-  border: "1px solid #E2E8F0",
-  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+  border: "1px solid #1e2433",
+  backgroundColor: "#1a1f2e",
+  color: "#e2e8f0",
+  boxShadow: "0 4px 12px rgb(0 0 0 / 0.4)",
   fontSize: "12px",
 };
 
@@ -40,6 +42,8 @@ export default function DonutChart({ data, title }) {
             dataKey="value"
             nameKey="name"
             animationDuration={800}
+            stroke="#151721"
+            strokeWidth={2}
           >
             {chartData.map((entry, i) => (
               <Cell key={i} fill={entry.color} />
@@ -48,9 +52,10 @@ export default function DonutChart({ data, title }) {
           <Tooltip
             formatter={(val) => formatCurrency(val)}
             contentStyle={TOOLTIP_STYLE}
+            itemStyle={{ color: "#e2e8f0" }}
           />
           <Legend
-            wrapperStyle={{ fontSize: "11px" }}
+            wrapperStyle={{ fontSize: "11px", color: "#94a3b8" }}
             iconType="circle"
             iconSize={8}
           />

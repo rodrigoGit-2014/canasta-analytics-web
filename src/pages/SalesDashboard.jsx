@@ -18,10 +18,10 @@ export default function SalesDashboard({ selectedCategory }) {
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="text-xl font-bold text-white">
             Dashboard de Ventas
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Analisis de transacciones 2023
           </p>
         </div>
