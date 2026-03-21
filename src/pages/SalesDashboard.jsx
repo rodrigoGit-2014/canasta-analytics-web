@@ -7,12 +7,12 @@ import GaugeRow from "../components/charts/GaugeRow";
 import ProductList from "../components/products/ProductList";
 import { useDashboardData } from "../hooks/useDashboardData";
 
-export default function SalesDashboard({ selectedCategory }) {
+export default function SalesDashboard() {
   const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [timeGranularity, setTimeGranularity] = useState("monthly");
 
   const { kpis, salesEvolution, treemapData, gaugeValues, productList } =
-    useDashboardData(selectedCategory, dateRange, timeGranularity);
+    useDashboardData(dateRange, timeGranularity);
 
   return (
     <>

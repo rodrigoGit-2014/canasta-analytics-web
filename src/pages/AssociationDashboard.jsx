@@ -7,14 +7,13 @@ import SliderFilters from "../components/association/SliderFilters";
 import { useAssociationData } from "../hooks/useAssociationData";
 import { Network, Table, BarChart3 } from "lucide-react";
 
-export default function AssociationDashboard({ selectedCategory }) {
+export default function AssociationDashboard() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [minLift, setMinLift] = useState(0.6);
   const [minConfidence, setMinConfidence] = useState(5);
   const [view, setView] = useState("graph");
 
   const { kpis, graphData, allProducts, tableRules } = useAssociationData(
-    selectedCategory,
     selectedProduct,
     minLift,
     minConfidence

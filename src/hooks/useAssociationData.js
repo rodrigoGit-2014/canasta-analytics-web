@@ -3,7 +3,6 @@ import { rulesData } from "../data/rulesData";
 import { PRODUCT_SECTION_MAP, SECTION_CATEGORIES } from "../data/categories";
 
 export function useAssociationData(
-  selectedCategory,
   selectedProduct,
   minLift,
   minConfidence
@@ -11,17 +10,9 @@ export function useAssociationData(
   const filteredRules = useMemo(() => {
     return rulesData.filter((rule) => {
       if (rule.lift < minLift || rule.confidence < minConfidence) return false;
-
-      if (selectedCategory !== "all") {
-        const antSection = PRODUCT_SECTION_MAP[rule.antecedent];
-        const conSection = PRODUCT_SECTION_MAP[rule.consequent];
-        if (antSection !== selectedCategory && conSection !== selectedCategory)
-          return false;
-      }
-
       return true;
     });
-  }, [selectedCategory, minLift, minConfidence]);
+  }, [minLift, minConfidence]);
 
   const productFilteredRules = useMemo(() => {
     if (!selectedProduct) return filteredRules;

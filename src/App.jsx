@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Sidebar from "./components/layout/Sidebar";
@@ -13,29 +12,12 @@ import DepartamentosPage from "./pages/DepartamentosPage";
 import SeccionesPage from "./pages/SeccionesPage";
 
 export default function App() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
   return (
     <BrowserRouter>
-      <DashboardLayout
-        sidebar={
-          <Sidebar
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-          />
-        }
-      >
+      <DashboardLayout sidebar={<Sidebar />}>
         <Routes>
-          <Route
-            path="/sales-dashboard"
-            element={<SalesDashboard selectedCategory={selectedCategory} />}
-          />
-          <Route
-            path="/association-rules"
-            element={
-              <AssociationDashboard selectedCategory={selectedCategory} />
-            }
-          />
+          <Route path="/sales-dashboard" element={<SalesDashboard />} />
+          <Route path="/association-rules" element={<AssociationDashboard />} />
           <Route
             path="/upload-transactions"
             element={<UploadTransactionsPage />}

@@ -3,19 +3,14 @@ import { salesData } from "../data/salesData";
 import { SECTION_CATEGORIES } from "../data/categories";
 import { groupByDate } from "../utils/aggregations";
 
-export function useDashboardData(selectedCategory, dateRange, timeGranularity) {
+export function useDashboardData(dateRange, timeGranularity) {
   const filteredData = useMemo(() => {
     return salesData.filter((row) => {
-      const catMatch =
-        selectedCategory === "all" || row.id_seccion === selectedCategory;
-      if (!catMatch) return false;
-
       if (dateRange.start && row.fecha < dateRange.start) return false;
       if (dateRange.end && row.fecha > dateRange.end) return false;
-
       return true;
     });
-  }, [selectedCategory, dateRange]);
+  }, [dateRange]);
 
   const dashboard = useMemo(() => {
     const totalSales = filteredData.reduce((s, r) => s + r.precio_total, 0);
