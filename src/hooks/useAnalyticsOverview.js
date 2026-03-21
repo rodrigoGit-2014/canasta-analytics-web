@@ -34,7 +34,7 @@ export default function useAnalyticsOverview(dateRange) {
 
     Promise.all([
       getSalesTotal(start, end),
-      getMonthlyTrend(),
+      getMonthlyTrend(start, end),
       getDepartments(start, end),
       getSections(),
     ])

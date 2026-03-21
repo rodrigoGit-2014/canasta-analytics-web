@@ -11,7 +11,10 @@ import ChartSkeleton from "../components/skeletons/ChartSkeleton";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 
 export default function AnalyticsOverview() {
-  const [dateRange, setDateRange] = useState({ start: null, end: null });
+  const [dateRange, setDateRange] = useState({
+    start: "2023-01-01",
+    end: new Date().toISOString().split("T")[0],
+  });
   const { kpis, monthlyTrend, departments, sections, loading, error } =
     useAnalyticsOverview(dateRange);
 

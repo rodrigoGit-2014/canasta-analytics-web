@@ -66,8 +66,9 @@ export async function getSalesTotal(fechaInicio, fechaFin) {
   return fetchJSON(`${BASE_URL}/sales/total${params}`);
 }
 
-export async function getMonthlyTrend() {
-  return fetchJSON(`${BASE_URL}/sales/monthly-trend`);
+export async function getMonthlyTrend(fechaInicio, fechaFin) {
+  const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
+  return fetchJSON(`${BASE_URL}/sales/monthly-trend${params}`);
 }
 
 // Analytics endpoints

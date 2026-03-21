@@ -38,6 +38,10 @@ export default function TrendLineChart({
             tick={{ fontSize: 11, fill: "#64748b" }}
             tickLine={false}
             axisLine={false}
+            interval={0}
+            angle={-45}
+            textAnchor="end"
+            height={50}
           />
           <YAxis
             tickFormatter={formatCompact}

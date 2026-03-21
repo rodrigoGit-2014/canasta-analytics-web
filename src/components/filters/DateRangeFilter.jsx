@@ -14,7 +14,7 @@ export default function DateRangeFilter({ dateRange, onDateRangeChange }) {
         type="date"
         value={dateRange.start || ""}
         min="2023-01-01"
-        max="2023-12-31"
+        max={new Date().toISOString().split("T")[0]}
         onChange={(e) =>
           onDateRangeChange({ ...dateRange, start: e.target.value || null })
         }
@@ -25,7 +25,7 @@ export default function DateRangeFilter({ dateRange, onDateRangeChange }) {
         type="date"
         value={dateRange.end || ""}
         min="2023-01-01"
-        max="2023-12-31"
+        max={new Date().toISOString().split("T")[0]}
         onChange={(e) =>
           onDateRangeChange({ ...dateRange, end: e.target.value || null })
         }
