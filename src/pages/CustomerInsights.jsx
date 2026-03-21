@@ -2,9 +2,10 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import useCustomerInsights from "../hooks/useCustomerInsights";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
-import HorizontalBarChart from "../components/charts/HorizontalBarChart";
+import TopCustomersChart from "../components/charts/TopCustomersChart";
 import DataTable from "../components/tables/DataTable";
 import LimitSelector from "../components/filters/LimitSelector";
+import DateRangeFilter from "../components/filters/DateRangeFilter";
 import KPISkeleton from "../components/skeletons/KPISkeleton";
 import ChartSkeleton from "../components/skeletons/ChartSkeleton";
 import TableSkeleton from "../components/skeletons/TableSkeleton";
@@ -22,7 +23,11 @@ const TABLE_COLUMNS = [
 
 export default function CustomerInsights() {
   const [limit, setLimit] = useState(20);
-  const { kpis, topCustomers, loading, error } = useCustomerInsights(limit);
+  const [dateRange, setDateRange] = useState({
+    start: "2023-01-01",
+    end: new Date().toISOString().split("T")[0],
+  });
+  const { kpis, topCustomers, loading, error } = useCustomerInsights(limit, dateRange);
 
   const tableData = topCustomers.map((c, i) => ({ ...c, _rank: i + 1 }));
 
@@ -33,7 +38,10 @@ export default function CustomerInsights() {
           <h1 className="text-xl font-bold text-white">Insights de Clientes</h1>
           <p className="text-sm text-slate-500">Análisis de comportamiento de clientes</p>
         </div>
-        <LimitSelector value={limit} onChange={setLimit} />
+        <div className="flex items-center gap-4 flex-wrap">
+          <DateRangeFilter dateRange={dateRange} onDateRangeChange={setDateRange} />
+          <LimitSelector value={limit} onChange={setLimit} />
+        </div>
       </div>
 
       {error && (
@@ -53,15 +61,7 @@ export default function CustomerInsights() {
         <div className="space-y-6">
           <GenericKPIRow items={kpis} />
 
-          <HorizontalBarChart
-            title="Top Clientes por Gasto"
-            data={topCustomers}
-            dataKey="total_spent"
-            nameKey="id_cliente"
-            color="#3B82F6"
-            formatter={(v) => formatCurrency(v)}
-            tooltipLabel="Gasto Total"
-          />
+          <TopCustomersChart data={topCustomers} />
 
           <DataTable columns={TABLE_COLUMNS} data={tableData} />
         </div>

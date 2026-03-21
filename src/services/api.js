@@ -92,13 +92,14 @@ export async function getTopProductsByRevenue(limit, fechaInicio, fechaFin) {
   return fetchJSON(`${BASE_URL}/analytics/products/top-revenue${params}`);
 }
 
-export async function getTopCustomers(limit) {
-  const params = buildParams({ limit });
+export async function getTopCustomers(limit, fechaInicio, fechaFin) {
+  const params = buildParams({ limit, fecha_inicio: fechaInicio, fecha_fin: fechaFin });
   return fetchJSON(`${BASE_URL}/analytics/customers/top${params}`);
 }
 
-export async function getCustomerAverageSpend() {
-  return fetchJSON(`${BASE_URL}/analytics/customers/average-spend`);
+export async function getCustomerAverageSpend(fechaInicio, fechaFin) {
+  const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
+  return fetchJSON(`${BASE_URL}/analytics/customers/average-spend${params}`);
 }
 
 export async function getOrdersCount(fechaInicio, fechaFin) {

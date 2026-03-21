@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { getOrdersCount, getOrdersAverageValue, getMonthlyTrend } from "../services/api";
+import { getOrdersCount, getMonthlyTrend } from "../services/api";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 import { ShoppingCart, DollarSign, Receipt } from "lucide-react";
 
@@ -9,7 +9,7 @@ const MONTH_NAMES = [
 ];
 
 const DEFAULT_START = "2023-01-01";
-const DEFAULT_END = "2023-12-31";
+const DEFAULT_END = new Date().toISOString().split("T")[0];
 
 export default function useOrdersInsights(dateRange) {
   const [ordersCount, setOrdersCount] = useState(null);
@@ -27,12 +27,11 @@ export default function useOrdersInsights(dateRange) {
 
     Promise.all([
       getOrdersCount(start, end),
-      getOrdersAverageValue(),
-      getMonthlyTrend(),
+      getMonthlyTrend(start, end),
     ])
-      .then(([count, avg, trend]) => {
+      .then(([count, trend]) => {
         if (cancelled) return;
-        setOrdersCount({ ...count, ...avg });
+        setOrdersCount(count);
         setMonthlyTrend(
           (trend.data || []).map((d) => ({
             ...d,
@@ -54,8 +53,8 @@ export default function useOrdersInsights(dateRange) {
     if (!ordersCount) return [];
     return [
       { title: "Total Pedidos", value: formatNumber(ordersCount.total_orders), icon: ShoppingCart, color: "#3B82F6" },
-      { title: "Ventas Totales", value: formatCurrency(ordersCount.total_sales), icon: DollarSign, color: "#10B981" },
-      { title: "Valor Medio", value: formatCurrency(ordersCount.average_order_value), icon: Receipt, color: "#8B5CF6" },
+      { title: "Ventas Totales", value: "$ " + formatNumber(Math.round(ordersCount.total_sales)), icon: DollarSign, color: "#10B981" },
+      { title: "Valor Medio", value: "$ " + formatNumber(ordersCount.average_order_value, 2), icon: Receipt, color: "#8B5CF6" },
     ];
   }, [ordersCount]);
 

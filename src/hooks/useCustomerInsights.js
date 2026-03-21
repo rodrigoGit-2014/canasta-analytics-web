@@ -3,11 +3,17 @@ import { getTopCustomers, getCustomerAverageSpend } from "../services/api";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 import { Users, DollarSign, Crown } from "lucide-react";
 
-export default function useCustomerInsights(limit) {
+const DEFAULT_START = "2023-01-01";
+const DEFAULT_END = new Date().toISOString().split("T")[0];
+
+export default function useCustomerInsights(limit, dateRange) {
   const [topCustomers, setTopCustomers] = useState([]);
   const [averageSpend, setAverageSpend] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const start = dateRange?.start || DEFAULT_START;
+  const end = dateRange?.end || DEFAULT_END;
 
   useEffect(() => {
     let cancelled = false;
@@ -15,8 +21,8 @@ export default function useCustomerInsights(limit) {
     setError(null);
 
     Promise.all([
-      getTopCustomers(limit),
-      getCustomerAverageSpend(),
+      getTopCustomers(limit, start, end),
+      getCustomerAverageSpend(start, end),
     ])
       .then(([top, avg]) => {
         if (cancelled) return;
@@ -31,7 +37,7 @@ export default function useCustomerInsights(limit) {
       });
 
     return () => { cancelled = true; };
-  }, [limit]);
+  }, [limit, start, end]);
 
   const kpis = useMemo(() => {
     if (!averageSpend) return [];
@@ -49,7 +55,7 @@ export default function useCustomerInsights(limit) {
         color: "#10B981",
       },
       {
-        title: "Mayor Gasto",
+        title: "Cliente con mayor gasto",
         value: topCustomers[0] ? formatCurrency(topCustomers[0].total_spent) : "—",
         icon: Crown,
         color: "#F59E0B",

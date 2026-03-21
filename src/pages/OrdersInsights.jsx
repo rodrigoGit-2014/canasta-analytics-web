@@ -2,14 +2,17 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import useOrdersInsights from "../hooks/useOrdersInsights";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
-import TrendLineChart from "../components/charts/TrendLineChart";
+import AreaTrendChart from "../components/charts/AreaTrendChart";
 import DateRangeFilter from "../components/filters/DateRangeFilter";
 import KPISkeleton from "../components/skeletons/KPISkeleton";
 import ChartSkeleton from "../components/skeletons/ChartSkeleton";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 
 export default function OrdersInsights() {
-  const [dateRange, setDateRange] = useState({ start: null, end: null });
+  const [dateRange, setDateRange] = useState({
+    start: "2023-01-01",
+    end: new Date().toISOString().split("T")[0],
+  });
   const { kpis, monthlyTrend, loading, error } = useOrdersInsights(dateRange);
 
   return (
@@ -41,24 +44,23 @@ export default function OrdersInsights() {
         <div className="space-y-6">
           <GenericKPIRow items={kpis} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <TrendLineChart
-              title="Evolución Mensual de Pedidos"
-              data={monthlyTrend}
-              lines={[
-                { dataKey: "order_count", color: "#3B82F6", name: "Pedidos" },
-              ]}
-              tooltipFormatter={(val, name) => [formatNumber(val), name]}
-            />
-            <TrendLineChart
-              title="Valor Medio por Pedido (Mensual)"
-              data={monthlyTrend}
-              lines={[
-                { dataKey: "avg_order_value", color: "#8B5CF6", name: "Valor Medio" },
-              ]}
-              tooltipFormatter={(val, name) => [formatCurrency(val), name]}
-            />
-          </div>
+          <AreaTrendChart
+            title="Evolución Mensual de Pedidos"
+            data={monthlyTrend}
+            dataKey="order_count"
+            color="#3B82F6"
+            name="Pedidos"
+            tooltipFormatter={(val, name) => [formatNumber(val), name]}
+          />
+
+          <AreaTrendChart
+            title="Valor Medio por Pedido (Mensual)"
+            data={monthlyTrend}
+            dataKey="avg_order_value"
+            color="#8B5CF6"
+            name="Valor Medio"
+            tooltipFormatter={(val, name) => [formatCurrency(val), name]}
+          />
         </div>
       )}
     </>
