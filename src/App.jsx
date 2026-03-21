@@ -9,6 +9,8 @@ import AnalyticsOverview from "./pages/AnalyticsOverview";
 import ProductInsights from "./pages/ProductInsights";
 import CustomerInsights from "./pages/CustomerInsights";
 import OrdersInsights from "./pages/OrdersInsights";
+import DepartamentosPage from "./pages/DepartamentosPage";
+import SeccionesPage from "./pages/SeccionesPage";
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -42,6 +44,8 @@ export default function App() {
           <Route path="/products-insights" element={<ProductInsights />} />
           <Route path="/customers-insights" element={<CustomerInsights />} />
           <Route path="/orders-insights" element={<OrdersInsights />} />
+          <Route path="/configuracion/departamentos" element={<DepartamentosPage key="departamentos" />} />
+          <Route path="/configuracion/secciones" element={<SeccionesPage key="secciones" />} />
           <Route path="*" element={<Navigate to="/sales-dashboard" replace />} />
         </Routes>
       </DashboardLayout>

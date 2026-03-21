@@ -8,6 +8,8 @@ import {
   Package,
   Users,
   ShoppingCart,
+  Building2,
+  LayoutList,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -30,7 +32,14 @@ const NAV_SECTIONS = [
   {
     label: "Datos",
     items: [
-      { path: "/upload-transactions", label: "Cargar Datos", icon: Upload },
+      { path: "/upload-transactions", label: "Cargar Transacciones", icon: Upload },
+    ],
+  },
+  {
+    label: "Configuración",
+    items: [
+      { path: "/configuracion/departamentos", label: "Departamentos", icon: Building2 },
+      { path: "/configuracion/secciones", label: "Secciones", icon: LayoutList },
     ],
   },
 ];

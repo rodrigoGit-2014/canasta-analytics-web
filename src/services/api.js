@@ -110,3 +110,40 @@ export async function getOrdersCount(fechaInicio, fechaFin) {
 export async function getOrdersAverageValue() {
   return fetchJSON(`${BASE_URL}/analytics/orders/average-value`);
 }
+
+// Config endpoints
+export async function uploadDepartamentos(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetch(`${BASE_URL}/config/departamentos/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || body?.message || `Error ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function fetchDepartamentos() {
+  return fetchJSON(`${BASE_URL}/config/departamentos`);
+}
+
+export async function uploadSecciones(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetch(`${BASE_URL}/config/secciones/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || body?.message || `Error ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function fetchSecciones() {
+  return fetchJSON(`${BASE_URL}/config/secciones`);
+}
