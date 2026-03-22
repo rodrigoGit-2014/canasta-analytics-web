@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Sparkles, LayoutList, Grid3x3 } from "lucide-react";
 import { useInteligencia } from "../contexts/InteligenciaContext";
+import useDatasetPreview from "../hooks/useDatasetPreview";
 import AnalysisFilterPanel from "../components/inteligencia/AnalysisFilterPanel";
 import AnalysisProgress from "../components/inteligencia/AnalysisProgress";
 import DatasetSummaryRow from "../components/inteligencia/DatasetSummaryRow";
+import TransactionPreviewTable from "../components/inteligencia/TransactionPreviewTable";
+import AnalyzeButton from "../components/inteligencia/AnalyzeButton";
 import PatternCardList from "../components/inteligencia/PatternCardList";
 import RelationshipTable from "../components/inteligencia/RelationshipTable";
 
@@ -13,13 +16,14 @@ export default function PurchasePatternsPage() {
     setFilters,
     runAnalysis,
     rules,
-    summary,
+    summary: analysisSummary,
     isLoading,
     isPolling,
     error,
     hasResults,
   } = useInteligencia();
 
+  const preview = useDatasetPreview(filters);
   const [view, setView] = useState("cards");
 
   return (
@@ -35,28 +39,67 @@ export default function PurchasePatternsPage() {
         </p>
       </div>
 
-      {/* Filters */}
+      {/* Filters (without button) */}
       <AnalysisFilterPanel
         filters={filters}
         onFiltersChange={setFilters}
         onAnalyze={runAnalysis}
         isLoading={isLoading}
+        hideButton
       />
 
-      {/* Error */}
+      {/* Preview loading */}
+      {preview.isLoading && (
+        <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-8 animate-fade-in-up">
+          <div className="flex items-center justify-center gap-3">
+            <span className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+            <p className="text-sm text-slate-400">Cargando vista previa del dataset...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Preview error */}
+      {preview.error && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
+          {preview.error}
+        </div>
+      )}
+
+      {/* Dataset preview: table + summary */}
+      {preview.hasPreview && (
+        <>
+          <TransactionPreviewTable
+            baskets={preview.baskets}
+            total={preview.totalBaskets}
+            page={preview.page}
+            totalPages={preview.totalPages}
+            pageSize={preview.pageSize}
+            onPageChange={preview.goToPage}
+            isPageLoading={preview.isPageLoading}
+          />
+          <DatasetSummaryRow summary={preview.summary} rulesCount={null} />
+        </>
+      )}
+
+      {/* Analyze button — visible when dates are selected */}
+      {filters.startDate && filters.endDate && (
+        <AnalyzeButton onClick={runAnalysis} isLoading={isLoading} />
+      )}
+
+      {/* Analysis error */}
       {error && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
           {error}
         </div>
       )}
 
-      {/* Loading */}
+      {/* Loading analysis */}
       {isLoading && <AnalysisProgress isPolling={isPolling} />}
 
-      {/* Results */}
-      {hasResults && summary && (
+      {/* Analysis results */}
+      {hasResults && analysisSummary && (
         <>
-          <DatasetSummaryRow summary={summary} rulesCount={rules.length} />
+          <DatasetSummaryRow summary={analysisSummary} rulesCount={rules.length} />
 
           {rules.length > 0 && (
             <>
@@ -107,8 +150,8 @@ export default function PurchasePatternsPage() {
         </>
       )}
 
-      {/* Empty state */}
-      {!hasResults && !isLoading && !error && (
+      {/* Empty state — only when no dates selected and no results */}
+      {!hasResults && !isLoading && !preview.hasPreview && !preview.isLoading && !error && (
         <div className="bg-[#151721] rounded-xl border border-[#1e2433] p-16 text-center">
           <div className="w-16 h-16 rounded-2xl bg-blue-600/10 flex items-center justify-center mx-auto mb-4">
             <Sparkles size={32} className="text-blue-400/60" />

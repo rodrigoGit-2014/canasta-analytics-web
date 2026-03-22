@@ -28,16 +28,23 @@ export default function DatasetSummaryRow({ summary, rulesCount }) {
       icon: BarChart3,
       color: "#F59E0B",
     },
-    {
+  ];
+
+  if (rulesCount != null) {
+    cards.push({
       title: "Relaciones Encontradas",
       value: formatNumber(rulesCount),
       icon: Link2,
       color: "#8B5CF6",
-    },
-  ];
+    });
+  }
+
+  const gridCols = cards.length === 3
+    ? "grid-cols-1 sm:grid-cols-3"
+    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className={`grid ${gridCols} gap-4`}>
       {cards.map((card) => (
         <KPICard key={card.title} {...card} />
       ))}

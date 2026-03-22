@@ -188,3 +188,15 @@ export async function getTransactionSummary(startDate, endDate, departmentId, se
   });
   return fetchJSON(`${BASE_URL}/transactions/summary${params}`);
 }
+
+export async function getTransactionBaskets(startDate, endDate, departmentId, sectionId, limit = 100, offset = 0) {
+  const params = buildParams({
+    start_date: startDate,
+    end_date: endDate,
+    department_id: departmentId,
+    section_id: sectionId,
+    limit,
+    offset,
+  });
+  return fetchJSON(`${BASE_URL}/transactions/baskets${params}`);
+}
