@@ -1,4 +1,5 @@
-const BASE_URL = "/api/v1";
+const SALES_API_URL = import.meta.env.VITE_SALES_API_URL || "/api/v1";
+const APRIORI_API_URL = import.meta.env.VITE_APRIORI_API_URL || "/api/v1";
 
 function parseNumericStrings(obj) {
   if (Array.isArray(obj)) return obj.map(parseNumericStrings);
@@ -41,7 +42,7 @@ export async function uploadTransactions(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${BASE_URL}/upload-transactions`, {
+  const response = await fetch(`${SALES_API_URL}/upload-transactions`, {
     method: "POST",
     body: formData,
   });
@@ -57,65 +58,65 @@ export async function uploadTransactions(file) {
 }
 
 export async function getJobStatus(jobId) {
-  return fetchJSON(`${BASE_URL}/jobs/${jobId}`);
+  return fetchJSON(`${SALES_API_URL}/jobs/${jobId}`);
 }
 
 // Sales endpoints
 export async function getSalesTotal(fechaInicio, fechaFin) {
   const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/sales/total${params}`);
+  return fetchJSON(`${SALES_API_URL}/sales/total${params}`);
 }
 
 export async function getMonthlyTrend(fechaInicio, fechaFin) {
   const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/sales/monthly-trend${params}`);
+  return fetchJSON(`${SALES_API_URL}/sales/monthly-trend${params}`);
 }
 
 // Analytics endpoints
 export async function getDepartments(fechaInicio, fechaFin) {
   const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/departments${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/departments${params}`);
 }
 
 export async function getSections(fechaInicio, fechaFin) {
   const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/sections${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/sections${params}`);
 }
 
 export async function getTopProductsByQuantity(limit, fechaInicio, fechaFin) {
   const params = buildParams({ limit, fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/products/top-quantity${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/products/top-quantity${params}`);
 }
 
 export async function getTopProductsByRevenue(limit, fechaInicio, fechaFin) {
   const params = buildParams({ limit, fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/products/top-revenue${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/products/top-revenue${params}`);
 }
 
 export async function getTopCustomers(limit, fechaInicio, fechaFin) {
   const params = buildParams({ limit, fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/customers/top${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/customers/top${params}`);
 }
 
 export async function getCustomerAverageSpend(fechaInicio, fechaFin) {
   const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/customers/average-spend${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/customers/average-spend${params}`);
 }
 
 export async function getOrdersCount(fechaInicio, fechaFin) {
   const params = buildParams({ fecha_inicio: fechaInicio, fecha_fin: fechaFin });
-  return fetchJSON(`${BASE_URL}/analytics/orders/count${params}`);
+  return fetchJSON(`${SALES_API_URL}/analytics/orders/count${params}`);
 }
 
 export async function getOrdersAverageValue() {
-  return fetchJSON(`${BASE_URL}/analytics/orders/average-value`);
+  return fetchJSON(`${SALES_API_URL}/analytics/orders/average-value`);
 }
 
 // Config endpoints
 export async function uploadDepartamentos(file) {
   const formData = new FormData();
   formData.append("file", file);
-  const response = await fetch(`${BASE_URL}/config/departamentos/upload`, {
+  const response = await fetch(`${SALES_API_URL}/config/departamentos/upload`, {
     method: "POST",
     body: formData,
   });
@@ -127,13 +128,13 @@ export async function uploadDepartamentos(file) {
 }
 
 export async function fetchDepartamentos() {
-  return fetchJSON(`${BASE_URL}/config/departamentos`);
+  return fetchJSON(`${SALES_API_URL}/config/departamentos`);
 }
 
 export async function uploadSecciones(file) {
   const formData = new FormData();
   formData.append("file", file);
-  const response = await fetch(`${BASE_URL}/config/secciones/upload`, {
+  const response = await fetch(`${SALES_API_URL}/config/secciones/upload`, {
     method: "POST",
     body: formData,
   });
@@ -145,12 +146,12 @@ export async function uploadSecciones(file) {
 }
 
 export async function fetchSecciones() {
-  return fetchJSON(`${BASE_URL}/config/secciones`);
+  return fetchJSON(`${SALES_API_URL}/config/secciones`);
 }
 
 // Apriori Analysis endpoints
 export async function runAprioriAnalysis({ startDate, endDate, departmentId, sectionId }) {
-  const response = await fetch(`${BASE_URL}/analysis/apriori`, {
+  const response = await fetch(`${APRIORI_API_URL}/analysis/apriori`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -171,12 +172,12 @@ export async function runAprioriAnalysis({ startDate, endDate, departmentId, sec
 }
 
 export async function getAprioriResult(runId) {
-  return fetchJSON(`${BASE_URL}/analysis/apriori/${runId}`);
+  return fetchJSON(`${APRIORI_API_URL}/analysis/apriori/${runId}`);
 }
 
 export async function getRecommendations(product, startDate, endDate) {
   const params = buildParams({ product, start_date: startDate, end_date: endDate });
-  return fetchJSON(`${BASE_URL}/recommendations${params}`);
+  return fetchJSON(`${APRIORI_API_URL}/recommendations${params}`);
 }
 
 export async function getTransactionSummary(startDate, endDate, departmentId, sectionId) {
@@ -186,7 +187,7 @@ export async function getTransactionSummary(startDate, endDate, departmentId, se
     department_id: departmentId,
     section_id: sectionId,
   });
-  return fetchJSON(`${BASE_URL}/transactions/summary${params}`);
+  return fetchJSON(`${APRIORI_API_URL}/transactions/summary${params}`);
 }
 
 export async function getTransactionBaskets(startDate, endDate, departmentId, sectionId, limit = 100, offset = 0) {
@@ -198,5 +199,5 @@ export async function getTransactionBaskets(startDate, endDate, departmentId, se
     limit,
     offset,
   });
-  return fetchJSON(`${BASE_URL}/transactions/baskets${params}`);
+  return fetchJSON(`${APRIORI_API_URL}/transactions/baskets${params}`);
 }
