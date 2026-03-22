@@ -147,3 +147,44 @@ export async function uploadSecciones(file) {
 export async function fetchSecciones() {
   return fetchJSON(`${BASE_URL}/config/secciones`);
 }
+
+// Apriori Analysis endpoints
+export async function runAprioriAnalysis({ startDate, endDate, departmentId, sectionId }) {
+  const response = await fetch(`${BASE_URL}/analysis/apriori`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      start_date: startDate,
+      end_date: endDate,
+      department_id: departmentId || undefined,
+      section_id: sectionId || undefined,
+      min_support: 0.01,
+      min_confidence: 0.05,
+      min_lift: 1.0,
+    }),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || body?.message || `Error ${response.status}: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function getAprioriResult(runId) {
+  return fetchJSON(`${BASE_URL}/analysis/apriori/${runId}`);
+}
+
+export async function getRecommendations(product, startDate, endDate) {
+  const params = buildParams({ product, start_date: startDate, end_date: endDate });
+  return fetchJSON(`${BASE_URL}/recommendations${params}`);
+}
+
+export async function getTransactionSummary(startDate, endDate, departmentId, sectionId) {
+  const params = buildParams({
+    start_date: startDate,
+    end_date: endDate,
+    department_id: departmentId,
+    section_id: sectionId,
+  });
+  return fetchJSON(`${BASE_URL}/transactions/summary${params}`);
+}

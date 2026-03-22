@@ -9,6 +9,8 @@ import {
   ShoppingCart,
   Building2,
   LayoutList,
+  Sparkles,
+  Lightbulb,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -21,10 +23,17 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    label: "Inteligencia Comercial",
+    items: [
+      { path: "/inteligencia/patrones", label: "Patrones de Compra", icon: Sparkles },
+      { path: "/inteligencia/recomendaciones", label: "Recomendaciones", icon: Lightbulb },
+      { path: "/inteligencia/relaciones", label: "Relaciones de Productos", icon: Network },
+    ],
+  },
+  {
     label: "Dashboard",
     items: [
       { path: "/sales-dashboard", label: "Ventas", icon: BarChart3 },
-      { path: "/association-rules", label: "Asociaciones", icon: Network },
       { path: "/analytics-overview", label: "Resumen", icon: LayoutDashboard },
       { path: "/products-insights", label: "Productos", icon: Package },
       { path: "/customers-insights", label: "Clientes", icon: Users },
