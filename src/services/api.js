@@ -147,3 +147,52 @@ export async function uploadSecciones(file) {
 export async function fetchSecciones() {
   return fetchJSON(`${BASE_URL}/config/secciones`);
 }
+
+// ── Association Rules (basket-insights-service) ──
+
+export async function triggerAprioriAnalysis(config = {}) {
+  const response = await fetch(`${BASE_URL}/association/analyze`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(config),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || `Error ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function getAnalysisRunStatus(runId) {
+  return fetchJSON(`${BASE_URL}/association/runs/${runId}`);
+}
+
+export async function getAnalysisRuns(limit = 10) {
+  return fetchJSON(`${BASE_URL}/association/runs?limit=${limit}`);
+}
+
+export async function getAssociationRules(runId = "latest", filters = {}) {
+  const params = buildParams(filters);
+  const path = runId === "latest"
+    ? `${BASE_URL}/association/runs/latest/rules`
+    : `${BASE_URL}/association/runs/${runId}/rules`;
+  return fetchJSON(`${path}${params}`);
+}
+
+export async function getProductRecommendations(productName, runId, limit = 20) {
+  const params = buildParams({ run_id: runId, limit });
+  return fetchJSON(`${BASE_URL}/products/${encodeURIComponent(productName)}/recommendations${params}`);
+}
+
+export async function explainRules(runId, options = {}) {
+  const response = await fetch(`${BASE_URL}/association/runs/${runId}/explain`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(options),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || `Error ${response.status}`);
+  }
+  return response.json();
+}

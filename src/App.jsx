@@ -3,6 +3,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 import Sidebar from "./components/layout/Sidebar";
 import SalesDashboard from "./pages/SalesDashboard";
 import AssociationDashboard from "./pages/AssociationDashboard";
+import ProductExplorer from "./pages/ProductExplorer";
 import UploadTransactionsPage from "./pages/UploadTransactionsPage";
 import AnalyticsOverview from "./pages/AnalyticsOverview";
 import ProductInsights from "./pages/ProductInsights";
@@ -18,6 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/sales-dashboard" element={<SalesDashboard />} />
           <Route path="/association-rules" element={<AssociationDashboard />} />
+          <Route path="/product-explorer" element={<ProductExplorer />} />
           <Route
             path="/upload-transactions"
             element={<UploadTransactionsPage />}

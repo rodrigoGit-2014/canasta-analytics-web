@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   BarChart3,
   Network,
+  Orbit,
   Upload,
   LayoutDashboard,
   Package,
@@ -25,6 +26,7 @@ const NAV_SECTIONS = [
     items: [
       { path: "/sales-dashboard", label: "Ventas", icon: BarChart3 },
       { path: "/association-rules", label: "Asociaciones", icon: Network },
+      { path: "/product-explorer", label: "Explorador", icon: Orbit },
       { path: "/analytics-overview", label: "Resumen", icon: LayoutDashboard },
       { path: "/products-insights", label: "Productos", icon: Package },
       { path: "/customers-insights", label: "Clientes", icon: Users },
