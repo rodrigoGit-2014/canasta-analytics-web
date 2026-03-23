@@ -4,14 +4,14 @@ import { formatNumber } from "../../utils/formatters";
 
 export default function DatasetSummaryRow({ summary, rulesCount }) {
   const avgPerPurchase = summary.avgProductsPerPurchase
-    ? Number(summary.avgProductsPerPurchase).toFixed(1)
+    ? Number(summary.avgProductsPerPurchase).toFixed(2)
     : summary.totalTransactions > 0
-      ? (summary.totalProducts / summary.totalTransactions).toFixed(1)
-      : "0";
+      ? (summary.totalProducts / summary.totalTransactions).toFixed(2)
+      : "0.00";
 
   const cards = [
     {
-      title: "Total Compras",
+      title: "Total Transacciones",
       value: formatNumber(summary.totalTransactions),
       icon: ShoppingCart,
       color: "#3B82F6",
@@ -36,6 +36,7 @@ export default function DatasetSummaryRow({ summary, rulesCount }) {
       value: formatNumber(rulesCount),
       icon: Link2,
       color: "#8B5CF6",
+      highlight: true,
     });
   }
 
