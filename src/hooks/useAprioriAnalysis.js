@@ -91,7 +91,7 @@ export default function useAprioriAnalysis() {
     }, POLL_INTERVAL);
   }, [fetchSummary]);
 
-  const runAnalysis = useCallback(async () => {
+  const runAnalysis = useCallback(async (params = {}) => {
     if (!filters.startDate || !filters.endDate) return;
     setIsLoading(true);
     setError(null);
@@ -102,7 +102,7 @@ export default function useAprioriAnalysis() {
     const filtersSnapshot = { ...filters };
 
     try {
-      const data = await runAprioriAnalysis(filtersSnapshot);
+      const data = await runAprioriAnalysis({ ...filtersSnapshot, ...params });
 
       // Async response — has run_id with status processing/pending
       if (data.run_id && (data.status === "processing" || data.status === "pending")) {

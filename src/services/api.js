@@ -150,7 +150,7 @@ export async function fetchSecciones() {
 }
 
 // Apriori Analysis endpoints
-export async function runAprioriAnalysis({ startDate, endDate, departmentId, sectionId }) {
+export async function runAprioriAnalysis({ startDate, endDate, departmentId, sectionId, minSupport, minConfidence, minLift }) {
   const response = await fetch(`${APRIORI_API_URL}/analysis/apriori`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -159,9 +159,9 @@ export async function runAprioriAnalysis({ startDate, endDate, departmentId, sec
       end_date: endDate,
       department_id: departmentId || undefined,
       section_id: sectionId || undefined,
-      min_support: 0.01,
-      min_confidence: 0.05,
-      min_lift: 1.0,
+      min_support: minSupport ?? 0.02,
+      min_confidence: minConfidence ?? 0.6,
+      min_lift: minLift ?? 1.5,
     }),
   });
   if (!response.ok) {

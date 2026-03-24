@@ -2,6 +2,7 @@ import { Calendar, Building2, FolderTree } from "lucide-react";
 import AnalyzeButton from "./AnalyzeButton";
 import AnalysisProgress from "./AnalysisProgress";
 import DatasetSummaryRow from "./DatasetSummaryRow";
+import AnalysisConfig from "./AnalysisConfig";
 
 export default function StepAnalysis({
   filters,
@@ -12,6 +13,8 @@ export default function StepAnalysis({
   hasResults,
   summary,
   rulesCount,
+  params,
+  onParamsChange,
 }) {
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -46,9 +49,12 @@ export default function StepAnalysis({
         </div>
       </div>
 
-      {/* Analyze button — visible when not loading and no results yet */}
+      {/* Config + Analyze button — visible when not loading and no results yet */}
       {!isLoading && !hasResults && (
-        <AnalyzeButton onClick={runAnalysis} isLoading={isLoading} />
+        <>
+          <AnalysisConfig params={params} onParamsChange={onParamsChange} />
+          <AnalyzeButton onClick={runAnalysis} isLoading={isLoading} />
+        </>
       )}
 
       {/* Analysis error */}

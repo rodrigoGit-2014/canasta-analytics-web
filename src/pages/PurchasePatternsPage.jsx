@@ -24,6 +24,11 @@ export default function PurchasePatternsPage() {
   const preview = useDatasetPreview(filters);
   const [currentStep, setCurrentStep] = useState(0);
   const [analysisRan, setAnalysisRan] = useState(false);
+  const [analysisParams, setAnalysisParams] = useState({
+    support: 2,
+    confidence: 60,
+    lift: 1.5,
+  });
 
   const canAdvance =
     currentStep === 0
@@ -52,8 +57,12 @@ export default function PurchasePatternsPage() {
 
   const handleRunAnalysis = useCallback(() => {
     setAnalysisRan(true);
-    runAnalysis();
-  }, [runAnalysis]);
+    runAnalysis({
+      minSupport: analysisParams.support / 100,
+      minConfidence: analysisParams.confidence / 100,
+      minLift: analysisParams.lift,
+    });
+  }, [runAnalysis, analysisParams]);
 
   const handleReset = useCallback(() => {
     setCurrentStep(0);
@@ -95,6 +104,8 @@ export default function PurchasePatternsPage() {
           hasResults={analysisRan && hasResults}
           summary={preview.summary}
           rulesCount={analysisRan && hasResults && rules.length > 0 ? rules.length : null}
+          params={analysisParams}
+          onParamsChange={setAnalysisParams}
         />
       )}
 

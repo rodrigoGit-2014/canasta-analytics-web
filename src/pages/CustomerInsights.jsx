@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertCircle } from "lucide-react";
+import EmptyDataState from "../components/layout/EmptyDataState";
 import useCustomerInsights from "../hooks/useCustomerInsights";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
 import TopCustomersChart from "../components/charts/TopCustomersChart";
@@ -44,12 +44,7 @@ export default function CustomerInsights() {
         </div>
       </div>
 
-      {error && (
-        <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 text-sm text-red-400">
-          <AlertCircle size={16} />
-          {error}
-        </div>
-      )}
+      {error && <EmptyDataState error={error} />}
 
       {loading ? (
         <div className="space-y-6">
@@ -57,7 +52,7 @@ export default function CustomerInsights() {
           <ChartSkeleton height={400} />
           <TableSkeleton rows={5} columns={7} />
         </div>
-      ) : (
+      ) : !error && (
         <div className="space-y-6">
           <GenericKPIRow items={kpis} />
 
