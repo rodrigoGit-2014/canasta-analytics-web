@@ -1,13 +1,14 @@
 import ConfigUploadPage from "../components/config/ConfigUploadPage";
-import { uploadDepartamentos, fetchDepartamentos } from "../services/api";
+import { uploadDepartamentos, fetchDepartamentos, deleteDepartamentos } from "../services/api";
 
 export default function DepartamentosPage() {
   return (
     <ConfigUploadPage
-      title="Configuración de Departamentos"
+      title="Configuracion de Departamentos"
       expectedHeaders={["id_departamento", "nombre"]}
       uploadFn={uploadDepartamentos}
       fetchFn={fetchDepartamentos}
+      deleteFn={deleteDepartamentos}
       idField="id_departamento"
     />
   );

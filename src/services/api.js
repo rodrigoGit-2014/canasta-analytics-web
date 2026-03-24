@@ -1,6 +1,11 @@
 const SALES_API_URL = import.meta.env.VITE_SALES_API_URL || "/api/v1";
 const APRIORI_API_URL = import.meta.env.VITE_APRIORI_API_URL || "/api/v1";
 
+function getAuthHeaders() {
+  const token = localStorage.getItem("auth_access_token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 function parseNumericStrings(obj) {
   if (Array.isArray(obj)) return obj.map(parseNumericStrings);
   if (obj && typeof obj === "object") {
@@ -19,8 +24,55 @@ function parseNumericStrings(obj) {
   return obj;
 }
 
+// Token refresh lock to prevent concurrent refresh attempts
+let refreshPromise = null;
+
+async function tryRefreshToken() {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const { refreshAccessToken } = await import("./authApi.js");
+      const refreshToken = localStorage.getItem("auth_refresh_token");
+      if (!refreshToken) return null;
+
+      const data = await refreshAccessToken(refreshToken);
+      localStorage.setItem("auth_access_token", data.access_token);
+      localStorage.setItem("auth_refresh_token", data.refresh_token);
+      return data.access_token;
+    } catch {
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
 async function fetchJSON(url) {
-  const response = await fetch(url);
+  const response = await fetch(url, { headers: getAuthHeaders() });
+
+  if (response.status === 401) {
+    const newToken = await tryRefreshToken();
+    if (newToken) {
+      const retryResponse = await fetch(url, {
+        headers: { Authorization: `Bearer ${newToken}` },
+      });
+      if (retryResponse.ok) {
+        const data = await retryResponse.json();
+        return parseNumericStrings(data);
+      }
+    }
+    // Refresh failed — clear auth and redirect
+    localStorage.removeItem("auth_access_token");
+    localStorage.removeItem("auth_refresh_token");
+    localStorage.removeItem("auth_user");
+    localStorage.removeItem("auth_company");
+    window.location.href = "/login";
+    throw new Error("Sesion expirada");
+  }
+
   if (!response.ok) {
     const body = await response.json().catch(() => null);
     throw new Error(
@@ -29,6 +81,37 @@ async function fetchJSON(url) {
   }
   const data = await response.json();
   return parseNumericStrings(data);
+}
+
+async function fetchWithAuth(url, options = {}) {
+  const headers = { ...getAuthHeaders(), ...(options.headers || {}) };
+  const response = await fetch(url, { ...options, headers });
+
+  if (response.status === 401) {
+    const newToken = await tryRefreshToken();
+    if (newToken) {
+      const retryHeaders = { ...options.headers, Authorization: `Bearer ${newToken}` };
+      const retryResponse = await fetch(url, { ...options, headers: retryHeaders });
+      if (!retryResponse.ok) {
+        const body = await retryResponse.json().catch(() => null);
+        throw new Error(body?.detail || body?.message || `Error ${retryResponse.status}`);
+      }
+      return retryResponse.json();
+    }
+    localStorage.removeItem("auth_access_token");
+    localStorage.removeItem("auth_refresh_token");
+    localStorage.removeItem("auth_user");
+    localStorage.removeItem("auth_company");
+    window.location.href = "/login";
+    throw new Error("Sesion expirada");
+  }
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || body?.message || `Error ${response.status}: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 function buildParams(params) {
@@ -42,19 +125,10 @@ export async function uploadTransactions(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${SALES_API_URL}/upload-transactions`, {
+  return fetchWithAuth(`${SALES_API_URL}/upload-transactions`, {
     method: "POST",
     body: formData,
   });
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new Error(
-      body?.detail || body?.message || `Error ${response.status}: ${response.statusText}`
-    );
-  }
-
-  return response.json();
 }
 
 export async function getJobStatus(jobId) {
@@ -116,42 +190,48 @@ export async function getOrdersAverageValue() {
 export async function uploadDepartamentos(file) {
   const formData = new FormData();
   formData.append("file", file);
-  const response = await fetch(`${SALES_API_URL}/config/departamentos/upload`, {
+  return fetchWithAuth(`${SALES_API_URL}/config/departamentos/upload`, {
     method: "POST",
     body: formData,
   });
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new Error(body?.detail || body?.message || `Error ${response.status}`);
-  }
-  return response.json();
 }
 
 export async function fetchDepartamentos() {
   return fetchJSON(`${SALES_API_URL}/config/departamentos`);
 }
 
+export async function deleteDepartamentos(ids = null) {
+  return fetchWithAuth(`${SALES_API_URL}/config/departamentos`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ids }),
+  });
+}
+
 export async function uploadSecciones(file) {
   const formData = new FormData();
   formData.append("file", file);
-  const response = await fetch(`${SALES_API_URL}/config/secciones/upload`, {
+  return fetchWithAuth(`${SALES_API_URL}/config/secciones/upload`, {
     method: "POST",
     body: formData,
   });
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new Error(body?.detail || body?.message || `Error ${response.status}`);
-  }
-  return response.json();
 }
 
 export async function fetchSecciones() {
   return fetchJSON(`${SALES_API_URL}/config/secciones`);
 }
 
+export async function deleteSecciones(ids = null) {
+  return fetchWithAuth(`${SALES_API_URL}/config/secciones`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ids }),
+  });
+}
+
 // Apriori Analysis endpoints
 export async function runAprioriAnalysis({ startDate, endDate, departmentId, sectionId, minSupport, minConfidence, minLift }) {
-  const response = await fetch(`${APRIORI_API_URL}/analysis/apriori`, {
+  return fetchWithAuth(`${APRIORI_API_URL}/analysis/apriori`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -164,11 +244,6 @@ export async function runAprioriAnalysis({ startDate, endDate, departmentId, sec
       min_lift: minLift ?? 1.5,
     }),
   });
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new Error(body?.detail || body?.message || `Error ${response.status}: ${response.statusText}`);
-  }
-  return response.json();
 }
 
 export async function getAprioriResult(runId) {
