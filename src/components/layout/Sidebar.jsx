@@ -26,7 +26,7 @@ const NAV_SECTIONS = [
     label: "Inteligencia Comercial",
     items: [
       { path: "/inteligencia/patrones", label: "Patrones de Compra", icon: Sparkles },
-      { path: "/inteligencia/recomendaciones", label: "Recomendaciones", icon: Lightbulb },
+      { path: "/inteligencia/recomendaciones", label: "Simulador", icon: Lightbulb },
       { path: "/inteligencia/relaciones", label: "Relaciones de Productos", icon: Network },
     ],
   },

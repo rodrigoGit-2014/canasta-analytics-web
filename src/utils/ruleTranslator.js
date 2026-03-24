@@ -35,6 +35,21 @@ export function translateRules(rules) {
   return rules.map(translateRule).sort((a, b) => b.strengthValue - a.strengthValue);
 }
 
+// Palette for dynamic color assignment when products aren't in the section map
+const GRAPH_PALETTE = [
+  "#3B82F6", "#10B981", "#F59E0B", "#EC4899", "#8B5CF6",
+  "#14B8A6", "#F97316", "#6366F1", "#22C55E", "#EF4444",
+  "#06B6D4", "#A855F7", "#84CC16", "#E11D48", "#0EA5E9",
+];
+
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
 export function buildGraphData(translatedRules, sectionMap, sectionCategories) {
   const nodesMap = new Map();
   const links = [];
@@ -43,10 +58,11 @@ export function buildGraphData(translatedRules, sectionMap, sectionCategories) {
     [rule.antecedent, rule.consequent].forEach((name) => {
       if (!nodesMap.has(name)) {
         const section = sectionMap[name];
+        const knownCategory = sectionCategories[section];
         nodesMap.set(name, {
           id: name,
-          color: sectionCategories[section]?.color || "#6B7280",
-          category: sectionCategories[section]?.label || "Otro",
+          color: knownCategory?.color || GRAPH_PALETTE[hashString(name) % GRAPH_PALETTE.length],
+          category: knownCategory?.label || "Producto",
         });
       }
     });
