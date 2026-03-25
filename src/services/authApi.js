@@ -15,12 +15,13 @@ export async function loginUser(email, password) {
   return response.json();
 }
 
-export async function signupUser({ companyName, email, password, fullName }) {
+export async function signupUser({ companyName, currency, email, password, fullName }) {
   const response = await fetch(`${AUTH_API_URL}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       company_name: companyName,
+      currency: currency || "CLP",
       email,
       password,
       full_name: fullName,

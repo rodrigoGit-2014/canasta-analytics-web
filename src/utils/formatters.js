@@ -1,9 +1,27 @@
-export function formatCurrency(n) {
-  return new Intl.NumberFormat("es-CL", {
+const CURRENCY_CONFIG = {
+  CLP: { locale: "es-CL", currency: "CLP", decimals: 0 },
+  USD: { locale: "en-US", currency: "USD", decimals: 2 },
+};
+
+function getStoredCurrency() {
+  try {
+    const stored = localStorage.getItem("auth_company");
+    if (stored) {
+      const company = JSON.parse(stored);
+      if (company.currency) return company.currency;
+    }
+  } catch {}
+  return "CLP";
+}
+
+export function formatCurrency(n, currencyOverride) {
+  const code = currencyOverride || getStoredCurrency();
+  const config = CURRENCY_CONFIG[code] || CURRENCY_CONFIG.CLP;
+  return new Intl.NumberFormat(config.locale, {
     style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    currency: config.currency,
+    minimumFractionDigits: config.decimals,
+    maximumFractionDigits: config.decimals,
   }).format(n);
 }
 

@@ -118,7 +118,7 @@ export default function ProductRankingTable({ data }) {
                 {formatNumber(totals.total_quantity)}
               </td>
               <td className="px-4 py-3 text-sm font-semibold text-white text-right font-mono tabular-nums">
-                {"$ " + formatNumber(Math.round(totals.total_revenue))}
+                {formatCurrency(totals.total_revenue)}
               </td>
               <td className="px-4 py-3 text-sm text-slate-500 text-right">
                 —

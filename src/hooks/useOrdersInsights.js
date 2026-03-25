@@ -53,8 +53,8 @@ export default function useOrdersInsights(dateRange) {
     if (!ordersCount) return [];
     return [
       { title: "Total Pedidos", value: formatNumber(ordersCount.total_orders), icon: ShoppingCart, color: "#3B82F6" },
-      { title: "Ventas Totales", value: "$ " + formatNumber(Math.round(ordersCount.total_sales)), icon: DollarSign, color: "#10B981" },
-      { title: "Valor Medio", value: "$ " + formatNumber(ordersCount.average_order_value, 2), icon: Receipt, color: "#8B5CF6" },
+      { title: "Ventas Totales", value: formatCurrency(ordersCount.total_sales), icon: DollarSign, color: "#10B981" },
+      { title: "Valor Medio", value: formatCurrency(ordersCount.average_order_value), icon: Receipt, color: "#8B5CF6" },
     ];
   }, [ordersCount]);
 

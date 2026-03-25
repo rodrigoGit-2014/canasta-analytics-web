@@ -16,6 +16,7 @@ export default function AuthSlidePanel({ isOpen, onClose, initialMode = "login" 
   // Signup state
   const [signupForm, setSignupForm] = useState({
     companyName: "",
+    currency: "CLP",
     fullName: "",
     email: "",
     password: "",
@@ -69,6 +70,7 @@ export default function AuthSlidePanel({ isOpen, onClose, initialMode = "login" 
     try {
       await signup({
         companyName: signupForm.companyName,
+        currency: signupForm.currency,
         fullName: signupForm.fullName,
         email: signupForm.email,
         password: signupForm.password,
@@ -222,6 +224,33 @@ export default function AuthSlidePanel({ isOpen, onClose, initialMode = "login" 
                       placeholder="Mi Supermercado"
                       autoFocus
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Moneda</label>
+                    <div className="flex gap-2">
+                      {[
+                        { value: "CLP", label: "CLP", flag: "🇨🇱", desc: "Peso Chileno" },
+                        { value: "USD", label: "USD", flag: "🇺🇸", desc: "Dolar US" },
+                      ].map((c) => (
+                        <button
+                          key={c.value}
+                          type="button"
+                          onClick={() => updateSignup("currency", c.value)}
+                          className={`flex-1 flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-sm transition-all duration-200 ${
+                            signupForm.currency === c.value
+                              ? "border-blue-500/40 bg-blue-500/10 text-white"
+                              : "border-[#1e2433] bg-[#0a0b0f] text-slate-500 hover:border-slate-600"
+                          }`}
+                        >
+                          <span className="text-base">{c.flag}</span>
+                          <div className="text-left">
+                            <span className="block text-xs font-semibold">{c.label}</span>
+                            <span className="block text-[10px] text-slate-600">{c.desc}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div>

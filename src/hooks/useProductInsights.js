@@ -45,7 +45,7 @@ export default function useProductInsights(limit, dateRange) {
     return [
       {
         title: "Total Revenue",
-        value: "$ " + formatNumber(Math.round(totalRevenue)),
+        value: formatCurrency(totalRevenue),
         icon: TrendingUp,
         color: "#3B82F6",
       },

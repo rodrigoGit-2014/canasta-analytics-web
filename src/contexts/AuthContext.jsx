@@ -62,8 +62,8 @@ export function AuthProvider({ children }) {
     navigate("/analytics-overview", { replace: true });
   }, [navigate]);
 
-  const signup = useCallback(async ({ companyName, email, password, fullName }) => {
-    const data = await signupUser({ companyName, email, password, fullName });
+  const signup = useCallback(async ({ companyName, currency, email, password, fullName }) => {
+    const data = await signupUser({ companyName, currency, email, password, fullName });
     persistAuth(data);
     navigate("/analytics-overview", { replace: true });
   }, [navigate]);
