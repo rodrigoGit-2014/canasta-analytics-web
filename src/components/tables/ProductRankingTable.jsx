@@ -10,7 +10,7 @@ const COLUMNS = [
   { key: "avg_unit_price", label: "Precio Medio", align: "right", format: (v) => formatCurrency(v) },
 ];
 
-export default function ProductRankingTable({ data }) {
+export default function ProductRankingTable({ data, maxHeight = "14rem" }) {
   const [sortKey, setSortKey] = useState(null);
   const [sortDir, setSortDir] = useState("desc");
 
@@ -56,7 +56,7 @@ export default function ProductRankingTable({ data }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto custom-scrollbar" style={{ maxHeight: "14rem" }}>
+      <div className="overflow-auto custom-scrollbar" style={{ maxHeight }}>
         <table className="w-full">
           <thead className="sticky top-0 bg-[#1a1f2e] z-10">
             <tr>

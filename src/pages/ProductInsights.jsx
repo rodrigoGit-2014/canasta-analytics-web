@@ -48,15 +48,15 @@ export default function ProductInsights() {
           <TableSkeleton rows={5} columns={5} />
         </div>
       ) : !error && (
-        <div className="space-y-2">
+        <div className="space-y-5">
           <GenericKPIRow items={kpis} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <TopProductsChart data={topByQuantity} />
             <TopRevenueChart data={topByRevenue} />
           </div>
 
-          <ProductRankingTable data={tableData} />
+          <ProductRankingTable data={tableData} maxHeight="24rem" />
         </div>
       )}
     </>

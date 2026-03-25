@@ -3,6 +3,7 @@ import EmptyDataState from "../components/layout/EmptyDataState";
 import useCustomerInsights from "../hooks/useCustomerInsights";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
 import TopCustomersChart from "../components/charts/TopCustomersChart";
+import DonutChart from "../components/charts/DonutChart";
 import DataTable from "../components/tables/DataTable";
 import LimitSelector from "../components/filters/LimitSelector";
 import DateRangeFilter from "../components/filters/DateRangeFilter";
@@ -27,7 +28,7 @@ export default function CustomerInsights() {
     start: "2023-01-01",
     end: new Date().toISOString().split("T")[0],
   });
-  const { kpis, topCustomers, loading, error } = useCustomerInsights(limit, dateRange);
+  const { kpis, topCustomers, frequencyDistribution, loading, error } = useCustomerInsights(limit, dateRange);
 
   const tableData = topCustomers.map((c, i) => ({ ...c, _rank: i + 1 }));
 
@@ -53,10 +54,17 @@ export default function CustomerInsights() {
           <TableSkeleton rows={5} columns={7} />
         </div>
       ) : !error && (
-        <div className="space-y-6">
+        <div className="space-y-5">
           <GenericKPIRow items={kpis} />
 
-          <TopCustomersChart data={topCustomers} />
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            <div className="lg:col-span-3">
+              <TopCustomersChart data={topCustomers} />
+            </div>
+            <div className="lg:col-span-2">
+              <DonutChart title="Frecuencia de Compra" data={frequencyDistribution} />
+            </div>
+          </div>
 
           <DataTable columns={TABLE_COLUMNS} data={tableData} />
         </div>

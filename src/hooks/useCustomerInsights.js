@@ -63,5 +63,23 @@ export default function useCustomerInsights(limit, dateRange) {
     ];
   }, [topCustomers, averageSpend]);
 
-  return { kpis, topCustomers, loading, error };
+  const frequencyDistribution = useMemo(() => {
+    if (!topCustomers.length) return [];
+
+    let frecuente = 0, regular = 0, ocasional = 0;
+    for (const c of topCustomers) {
+      const orders = c.order_count || 0;
+      if (orders >= 10) frecuente++;
+      else if (orders >= 3) regular++;
+      else ocasional++;
+    }
+
+    return [
+      { name: "Frecuente (10+)", value: frecuente, color: "#3B82F6" },
+      { name: "Regular (3-9)", value: regular, color: "#F59E0B" },
+      { name: "Ocasional (1-2)", value: ocasional, color: "#64748B" },
+    ].filter(s => s.value > 0);
+  }, [topCustomers]);
+
+  return { kpis, topCustomers, frequencyDistribution, loading, error };
 }
