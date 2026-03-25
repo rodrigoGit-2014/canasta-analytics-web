@@ -15,19 +15,18 @@ export default function AnalyticsOverview() {
     start: "2023-01-01",
     end: new Date().toISOString().split("T")[0],
   });
-  const { kpis, monthlyTrend, departments, sections, loading, error } =
+  const { kpis, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error } =
     useAnalyticsOverview(dateRange);
 
-  const donutData = departments.map((d, i) => {
-    const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#EC4899", "#14B8A6", "#F97316"];
-    return {
-      name: `Depto ${d.id_departamento}`,
-      value: d.total_sales,
-      order_count: d.order_count,
-      percentage: d.percentage_of_total,
-      color: colors[i % colors.length],
-    };
-  });
+  const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#EC4899", "#14B8A6", "#F97316"];
+
+  const donutData = departments.map((d, i) => ({
+    name: deptNameMap[String(d.id_departamento)] || `Depto ${d.id_departamento}`,
+    value: d.total_sales,
+    order_count: d.order_count,
+    percentage: d.percentage_of_total,
+    color: colors[i % colors.length],
+  }));
 
   return (
     <>
@@ -72,7 +71,7 @@ export default function AnalyticsOverview() {
           </div>
 
           {sections.length > 0 && (
-            <SectionsByDepartment data={sections} />
+            <SectionsByDepartment data={sections} deptNameMap={deptNameMap} secNameMap={secNameMap} />
           )}
         </div>
       )}

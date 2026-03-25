@@ -74,7 +74,7 @@ export function AuthProvider({ children }) {
     clearStorage();
     setUser(null);
     setCompany(null);
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   }, [navigate]);
 
   const refresh = useCallback(async () => {

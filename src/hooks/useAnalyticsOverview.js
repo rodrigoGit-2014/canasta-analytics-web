@@ -4,6 +4,8 @@ import {
   getMonthlyTrend,
   getDepartments,
   getSections,
+  fetchDepartamentos,
+  fetchSecciones,
 } from "../services/api";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 import { DollarSign, ShoppingCart, Receipt, Users } from "lucide-react";
@@ -21,6 +23,8 @@ export default function useAnalyticsOverview(dateRange) {
   const [monthlyTrend, setMonthlyTrend] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [sections, setSections] = useState([]);
+  const [deptNameMap, setDeptNameMap] = useState({});
+  const [secNameMap, setSecNameMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -37,8 +41,10 @@ export default function useAnalyticsOverview(dateRange) {
       getMonthlyTrend(start, end),
       getDepartments(start, end),
       getSections(start, end),
+      fetchDepartamentos().catch(() => []),
+      fetchSecciones().catch(() => []),
     ])
-      .then(([sales, trend, deps, secs]) => {
+      .then(([sales, trend, deps, secs, deptConfig, secConfig]) => {
         if (cancelled) return;
         setSalesTotal(sales);
         setMonthlyTrend(
@@ -49,6 +55,19 @@ export default function useAnalyticsOverview(dateRange) {
         );
         setDepartments(deps.data || []);
         setSections(secs.data || []);
+
+        const dMap = {};
+        for (const d of deptConfig) {
+          dMap[String(d.id_departamento)] = d.nombre;
+        }
+        setDeptNameMap(dMap);
+
+        const sMap = {};
+        for (const s of secConfig) {
+          sMap[String(s.id_seccion)] = s.nombre;
+        }
+        setSecNameMap(sMap);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -70,5 +89,5 @@ export default function useAnalyticsOverview(dateRange) {
     ];
   }, [salesTotal]);
 
-  return { kpis, monthlyTrend, departments, sections, loading, error };
+  return { kpis, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error };
 }

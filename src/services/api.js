@@ -69,7 +69,7 @@ async function fetchJSON(url) {
     localStorage.removeItem("auth_refresh_token");
     localStorage.removeItem("auth_user");
     localStorage.removeItem("auth_company");
-    window.location.href = "/login";
+    window.location.href = "/";
     throw new Error("Sesion expirada");
   }
 
@@ -102,7 +102,7 @@ async function fetchWithAuth(url, options = {}) {
     localStorage.removeItem("auth_refresh_token");
     localStorage.removeItem("auth_user");
     localStorage.removeItem("auth_company");
-    window.location.href = "/login";
+    window.location.href = "/";
     throw new Error("Sesion expirada");
   }
 

@@ -11,34 +11,41 @@ import {
   LayoutList,
   Sparkles,
   Lightbulb,
+  Brain,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 
 const NAV_SECTIONS = [
   {
-    label: "Configuracion",
+    label: "Mis Ventas",
     items: [
-      { path: "/configuracion/departamentos", label: "Departamentos", icon: Building2 },
-      { path: "/configuracion/secciones", label: "Secciones", icon: LayoutList },
-      { path: "/upload-transactions", label: "Cargar Transacciones", icon: Upload },
-    ],
-  },
-  {
-    label: "Inteligencia Comercial",
-    items: [
-      { path: "/inteligencia/patrones", label: "Patrones de Compra", icon: Sparkles },
-      { path: "/inteligencia/recomendaciones", label: "Simulador", icon: Lightbulb },
-      { path: "/inteligencia/relaciones", label: "Relaciones de Productos", icon: Network },
-    ],
-  },
-  {
-    label: "Dashboard",
-    items: [
-      { path: "/analytics-overview", label: "Resumen", icon: LayoutDashboard },
+      { path: "/analytics-overview", label: "Resumen General", icon: LayoutDashboard },
       { path: "/products-insights", label: "Productos", icon: Package },
       { path: "/customers-insights", label: "Clientes", icon: Users },
       { path: "/orders-insights", label: "Pedidos", icon: ShoppingCart },
+    ],
+  },
+  {
+    label: "Descubrir",
+    items: [
+      { path: "/inteligencia/patrones", label: "Patrones de Compra", icon: Sparkles },
+      { path: "/inteligencia/relaciones", label: "Explorar Relaciones", icon: Network },
+      { path: "/inteligencia/recomendaciones", label: "Simulador de Combos", icon: Lightbulb },
+    ],
+  },
+  {
+    label: "Inteligencia AI",
+    items: [
+      { path: "/inteligencia/ai", label: "Insights Estrategicos", icon: Brain },
+    ],
+  },
+  {
+    label: "Configuracion",
+    items: [
+      { path: "/upload-transactions", label: "Cargar Datos", icon: Upload },
+      { path: "/configuracion/departamentos", label: "Departamentos", icon: Building2 },
+      { path: "/configuracion/secciones", label: "Secciones", icon: LayoutList },
     ],
   },
 ];
@@ -60,7 +67,7 @@ export default function Sidebar() {
             <h1 className="text-sm font-bold text-white leading-tight">
               {company?.name || "Retail Analytics"}
             </h1>
-            <p className="text-xs text-slate-500">Analytics Dashboard</p>
+            <p className="text-xs text-slate-500">Inteligencia Comercial</p>
           </div>
         </div>
       </div>
