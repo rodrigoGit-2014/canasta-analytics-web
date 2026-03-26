@@ -38,7 +38,6 @@ export default function useAIInsights() {
       }
 
       const data = await response.json();
-      console.log("[useAIInsights] Raw API response:", JSON.stringify(data?.data, null, 2));
       // Normalize data to prevent render crashes
       if (data?.data) {
         const d = data.data;
