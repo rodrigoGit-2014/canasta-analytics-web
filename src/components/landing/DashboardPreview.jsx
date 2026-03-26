@@ -19,7 +19,7 @@ export default function DashboardPreview() {
               <div className="w-3 h-3 rounded-full bg-amber-500/60" />
               <div className="w-3 h-3 rounded-full bg-emerald-500/60" />
             </div>
-            <div className="flex-1 mx-4 px-4 py-1.5 bg-[#1a1b25] rounded-lg text-xs text-slate-600 text-center">descubre-patrones-compra.app/analytics-overview</div>
+            <div className="flex-1 mx-4 px-4 py-1.5 bg-[#1a1b25] rounded-lg text-xs text-slate-600 text-center">descubre-patrones-compra.store/analytics-overview</div>
           </div>
           {/* Dashboard content simulation */}
           <div className="p-6 space-y-4">

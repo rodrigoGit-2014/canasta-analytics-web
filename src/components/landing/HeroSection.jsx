@@ -69,7 +69,7 @@ export default function HeroSection({ onSignup }) {
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
                 </div>
-                <div className="flex-1 mx-3 px-3 py-1 bg-[#1a1b25] rounded text-[10px] text-slate-600 text-center">descubre-patrones-compra.app</div>
+                <div className="flex-1 mx-3 px-3 py-1 bg-[#1a1b25] rounded text-[10px] text-slate-600 text-center">descubre-patrones-compra.store</div>
               </div>
               {/* Simulated dashboard content */}
               <div className="p-4 space-y-3">
