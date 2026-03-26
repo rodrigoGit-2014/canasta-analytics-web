@@ -41,10 +41,10 @@ export default function InsightCardGrid({ findings, crossSelling, recommendation
               <tbody>
                 {crossSelling.map((opp, i) => (
                   <tr key={i} className="border-t border-[#1e2433]">
-                    <td className="px-4 py-3 text-white font-medium">{opp.combinacion?.join(" + ")}</td>
-                    <td className="px-4 py-3 text-blue-400">{(opp.confidence * 100).toFixed(0)}%</td>
-                    <td className="px-4 py-3 text-emerald-400">{opp.lift?.toFixed(1)}x</td>
-                    <td className="px-4 py-3 text-slate-400 text-xs">{opp.recomendacion_accion}</td>
+                    <td className="px-4 py-3 text-white font-medium">{opp.combinacion?.join(" + ") || "—"}</td>
+                    <td className="px-4 py-3 text-blue-400">{opp.confidence != null ? `${(opp.confidence * 100).toFixed(0)}%` : "—"}</td>
+                    <td className="px-4 py-3 text-emerald-400">{opp.lift != null ? `${Number(opp.lift).toFixed(1)}x` : "—"}</td>
+                    <td className="px-4 py-3 text-slate-400 text-xs">{opp.recomendacion_accion || ""}</td>
                   </tr>
                 ))}
               </tbody>
