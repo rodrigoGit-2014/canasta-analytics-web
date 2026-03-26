@@ -5,6 +5,7 @@ import GenerateInsightsButton from "./GenerateInsightsButton";
 import ExecutiveSummaryBanner from "./ExecutiveSummaryBanner";
 import InsightCardGrid from "./InsightCardGrid";
 import AIRequiresAnalysis from "./AIRequiresAnalysis";
+import InsightErrorBoundary from "./InsightErrorBoundary";
 import { Loader2, RefreshCw } from "lucide-react";
 
 export default function InsightsPanel() {
@@ -70,41 +71,32 @@ export default function InsightsPanel() {
       )}
 
       {/* Results */}
-      {insights && insights.data && (() => {
-        try {
-          const data = insights.data;
-          return (
-            <div className="space-y-6 animate-fade-in-up">
-              <div className="flex justify-end">
-                <button
-                  onClick={() => { reset(); handleGenerate(); }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-400 hover:text-purple-400 bg-[#1e2433] rounded-lg transition"
-                >
-                  <RefreshCw size={13} /> Regenerar
-                </button>
-              </div>
-              {data.titulo && (
-                <ExecutiveSummaryBanner
-                  title={data.titulo}
-                  summary={data.resumen_general || ""}
-                />
-              )}
-              <InsightCardGrid
-                findings={Array.isArray(data.hallazgos_clave) ? data.hallazgos_clave : []}
-                crossSelling={Array.isArray(data.oportunidades_cross_selling) ? data.oportunidades_cross_selling : []}
-                recommendations={Array.isArray(data.recomendaciones_estrategicas) ? data.recomendaciones_estrategicas : []}
-                trends={Array.isArray(data.tendencias_detectadas) ? data.tendencias_detectadas : []}
+      {insights && insights.data && (
+        <InsightErrorBoundary onReset={reset}>
+          <div className="space-y-6 animate-fade-in-up">
+            <div className="flex justify-end">
+              <button
+                onClick={() => { reset(); handleGenerate(); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-400 hover:text-purple-400 bg-[#1e2433] rounded-lg transition"
+              >
+                <RefreshCw size={13} /> Regenerar
+              </button>
+            </div>
+            {insights.data.titulo && (
+              <ExecutiveSummaryBanner
+                title={insights.data.titulo}
+                summary={insights.data.resumen_general || ""}
               />
-            </div>
-          );
-        } catch {
-          return (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
-              <p className="text-sm text-red-400">Error al procesar la respuesta del modelo AI. Intenta regenerar.</p>
-            </div>
-          );
-        }
-      })()}
+            )}
+            <InsightCardGrid
+              findings={insights.data.hallazgos_clave || []}
+              crossSelling={insights.data.oportunidades_cross_selling || []}
+              recommendations={insights.data.recomendaciones_estrategicas || []}
+              trends={insights.data.tendencias_detectadas || []}
+            />
+          </div>
+        </InsightErrorBoundary>
+      )}
     </div>
   );
 }

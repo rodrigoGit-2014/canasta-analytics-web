@@ -38,6 +38,22 @@ export default function useAIInsights() {
       }
 
       const data = await response.json();
+      // Normalize data to prevent render crashes
+      if (data?.data) {
+        const d = data.data;
+        if (!Array.isArray(d.hallazgos_clave)) d.hallazgos_clave = [];
+        if (!Array.isArray(d.oportunidades_cross_selling)) d.oportunidades_cross_selling = [];
+        if (!Array.isArray(d.recomendaciones_estrategicas)) d.recomendaciones_estrategicas = [];
+        if (!Array.isArray(d.tendencias_detectadas)) d.tendencias_detectadas = [];
+        // Sanitize cross-selling entries
+        d.oportunidades_cross_selling = d.oportunidades_cross_selling.map((opp) => ({
+          ...opp,
+          combinacion: Array.isArray(opp.combinacion) ? opp.combinacion : [],
+          confidence: typeof opp.confidence === "number" ? opp.confidence : null,
+          lift: typeof opp.lift === "number" ? opp.lift : null,
+          recomendacion_accion: opp.recomendacion_accion || "",
+        }));
+      }
       setInsights(data);
       return data;
     } catch (err) {
