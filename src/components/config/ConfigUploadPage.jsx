@@ -19,6 +19,7 @@ export default function ConfigUploadPage({
   fetchFn,
   deleteFn,
   idField,
+  helpGuide,
 }) {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -145,6 +146,9 @@ export default function ConfigUploadPage({
       <div className="flex items-center gap-3 mb-6">
         <h1 className="text-xl font-bold text-white">{title}</h1>
       </div>
+
+      {/* Help Guide */}
+      {helpGuide && <div className="mb-6">{helpGuide}</div>}
 
       {/* Upload Card */}
       <div className="mb-6">
