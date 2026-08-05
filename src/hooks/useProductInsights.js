@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { getTopProductsByQuantity, getTopProductsByRevenue } from "../services/api";
 import { formatCurrency, formatNumber } from "../utils/formatters";
-import { TrendingUp, Package, LayoutGrid } from "lucide-react";
+import { TrendingUp, Package, Tag } from "lucide-react";
 
 const DEFAULT_START = "2023-01-01";
 const DEFAULT_END = new Date().toISOString().split("T")[0];
@@ -42,10 +42,13 @@ export default function useProductInsights(limit, dateRange) {
   const kpis = useMemo(() => {
     const totalRevenue = topByRevenue.reduce((sum, p) => sum + (p.total_revenue || 0), 0);
     const totalQuantity = topByQuantity.reduce((sum, p) => sum + (p.total_quantity || 0), 0);
+    const avgUnitPrice = topByRevenue.length
+      ? topByRevenue.reduce((sum, p) => sum + (p.avg_unit_price || 0), 0) / topByRevenue.length
+      : 0;
     return [
       {
         title: "Total Revenue",
-        value: "$ " + formatNumber(Math.round(totalRevenue)),
+        value: formatCurrency(totalRevenue),
         icon: TrendingUp,
         color: "#3B82F6",
       },
@@ -56,9 +59,9 @@ export default function useProductInsights(limit, dateRange) {
         color: "#10B981",
       },
       {
-        title: "Productos Mostrados",
-        value: formatNumber(topByRevenue.length),
-        icon: LayoutGrid,
+        title: "Precio Medio Unitario",
+        value: formatCurrency(avgUnitPrice),
+        icon: Tag,
         color: "#F59E0B",
       },
     ];

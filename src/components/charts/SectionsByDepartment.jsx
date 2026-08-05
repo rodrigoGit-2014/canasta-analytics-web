@@ -12,19 +12,11 @@ import {
 import { formatCurrency, formatNumber, formatCompact } from "../../utils/formatters";
 import ChartCard from "./ChartCard";
 
-const DEPT_COLORS = {
-  "4": "#3B82F6",
-  "7": "#F59E0B",
-  "16": "#EC4899",
-  "20": "#10B981",
-};
-
-const DEPT_NAMES = {
-  "4": "Frescos",
-  "7": "Bebidas",
-  "16": "Lácteos",
-  "20": "Untables",
-};
+const COLOR_PALETTE = [
+  "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6",
+  "#EF4444", "#EC4899", "#14B8A6", "#F97316",
+  "#06B6D4", "#A855F7", "#84CC16", "#FB923C",
+];
 
 const TOOLTIP_STYLE = {
   borderRadius: "8px",
@@ -41,35 +33,49 @@ function CustomTooltip({ active, payload }) {
   const d = payload[0].payload;
   return (
     <div style={TOOLTIP_STYLE}>
-      <p className="font-semibold text-white text-sm mb-1">Sección {d.id_seccion}</p>
+      <p className="font-semibold text-white text-sm mb-1">{d.secName}</p>
       <p className="text-slate-400 text-xs mb-2">{d.deptLabel}</p>
       <div className="space-y-1">
         <p className="text-slate-300 text-xs">Ventas: {formatCurrency(d.total_sales)}</p>
         <p className="text-slate-300 text-xs">Pedidos: {formatNumber(d.order_count)}</p>
-        <p className="text-slate-300 text-xs">Participación: {Number(d.percentage_of_total).toFixed(1)}%</p>
+        <p className="text-slate-300 text-xs">Participacion: {Number(d.percentage_of_total).toFixed(1)}%</p>
       </div>
     </div>
   );
 }
 
-export default function SectionsByDepartment({ data }) {
+export default function SectionsByDepartment({ data, deptNameMap = {}, secNameMap = {} }) {
   const { chartData, grouped } = useMemo(() => {
+    // Build a color map per department
+    const uniqueDepts = [...new Set(data.map((d) => String(d.id_departamento)))];
+    const deptColorMap = {};
+    uniqueDepts.forEach((id, i) => {
+      deptColorMap[id] = COLOR_PALETTE[i % COLOR_PALETTE.length];
+    });
+
     const sorted = [...data].sort((a, b) => b.total_sales - a.total_sales);
-    const enriched = sorted.map((d) => ({
-      ...d,
-      label: `Sec ${d.id_seccion}`,
-      color: DEPT_COLORS[d.id_departamento] || "#64748b",
-      deptLabel: `Depto ${d.id_departamento} — ${DEPT_NAMES[d.id_departamento] || "Otro"}`,
-    }));
+    const enriched = sorted.map((d) => {
+      const deptId = String(d.id_departamento);
+      const secId = String(d.id_seccion);
+      const deptName = deptNameMap[deptId] || `Depto ${deptId}`;
+      const secName = secNameMap[secId] || `Seccion ${secId}`;
+      return {
+        ...d,
+        label: secName,
+        secName,
+        color: deptColorMap[deptId] || "#64748b",
+        deptLabel: deptName,
+      };
+    });
 
     const groups = {};
     for (const s of enriched) {
-      const key = s.id_departamento;
+      const key = String(s.id_departamento);
       if (!groups[key]) {
         groups[key] = {
           id: key,
-          name: DEPT_NAMES[key] || `Depto ${key}`,
-          color: DEPT_COLORS[key] || "#64748b",
+          name: deptNameMap[key] || `Depto ${key}`,
+          color: deptColorMap[key] || "#64748b",
           sections: [],
           totalSales: 0,
           totalOrders: 0,
@@ -82,7 +88,7 @@ export default function SectionsByDepartment({ data }) {
 
     const groupedArr = Object.values(groups).sort((a, b) => b.totalSales - a.totalSales);
     return { chartData: enriched, grouped: groupedArr };
-  }, [data]);
+  }, [data, deptNameMap, secNameMap]);
 
   const maxSales = chartData.length > 0 ? chartData[0].total_sales : 1;
 

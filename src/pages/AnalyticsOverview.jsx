@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertCircle } from "lucide-react";
+import EmptyDataState from "../components/layout/EmptyDataState";
 import useAnalyticsOverview from "../hooks/useAnalyticsOverview";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
 import TrendLineChart from "../components/charts/TrendLineChart";
@@ -15,19 +15,18 @@ export default function AnalyticsOverview() {
     start: "2023-01-01",
     end: new Date().toISOString().split("T")[0],
   });
-  const { kpis, monthlyTrend, departments, sections, loading, error } =
+  const { kpis, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error } =
     useAnalyticsOverview(dateRange);
 
-  const donutData = departments.map((d, i) => {
-    const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#EC4899", "#14B8A6", "#F97316"];
-    return {
-      name: `Depto ${d.id_departamento}`,
-      value: d.total_sales,
-      order_count: d.order_count,
-      percentage: d.percentage_of_total,
-      color: colors[i % colors.length],
-    };
-  });
+  const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#EC4899", "#14B8A6", "#F97316"];
+
+  const donutData = departments.map((d, i) => ({
+    name: deptNameMap[String(d.id_departamento)] || `Depto ${d.id_departamento}`,
+    value: d.total_sales,
+    order_count: d.order_count,
+    percentage: d.percentage_of_total,
+    color: colors[i % colors.length],
+  }));
 
   return (
     <>
@@ -39,12 +38,7 @@ export default function AnalyticsOverview() {
         <DateRangeFilter dateRange={dateRange} onDateRangeChange={setDateRange} />
       </div>
 
-      {error && (
-        <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 text-sm text-red-400">
-          <AlertCircle size={16} />
-          {error}
-        </div>
-      )}
+      {error && <EmptyDataState error={error} />}
 
       {loading ? (
         <div className="space-y-6">
@@ -55,12 +49,12 @@ export default function AnalyticsOverview() {
           </div>
           <ChartSkeleton height={300} />
         </div>
-      ) : (
-        <div className="space-y-3">
-          <GenericKPIRow items={kpis} />
+      ) : !error && (
+        <div className="space-y-5">
+          <GenericKPIRow items={kpis} hero={true} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            <div className="lg:col-span-3">
               <TrendLineChart
                 title="Tendencia Mensual de Ventas"
                 data={monthlyTrend}
@@ -70,14 +64,16 @@ export default function AnalyticsOverview() {
                 tooltipFormatter={(val, name) => [formatCurrency(val), name]}
               />
             </div>
-            <DonutChart
-              title="Ventas por Departamento"
-              data={donutData}
-            />
+            <div className="lg:col-span-2">
+              <DonutChart
+                title="Ventas por Departamento"
+                data={donutData}
+              />
+            </div>
           </div>
 
           {sections.length > 0 && (
-            <SectionsByDepartment data={sections} />
+            <SectionsByDepartment data={sections} deptNameMap={deptNameMap} secNameMap={secNameMap} />
           )}
         </div>
       )}

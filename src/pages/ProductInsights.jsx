@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertCircle } from "lucide-react";
+import EmptyDataState from "../components/layout/EmptyDataState";
 import useProductInsights from "../hooks/useProductInsights";
 import GenericKPIRow from "../components/kpis/GenericKPIRow";
 import TopProductsChart from "../components/charts/TopProductsChart";
@@ -36,12 +36,7 @@ export default function ProductInsights() {
         </div>
       </div>
 
-      {error && (
-        <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 text-sm text-red-400">
-          <AlertCircle size={16} />
-          {error}
-        </div>
-      )}
+      {error && <EmptyDataState error={error} />}
 
       {loading ? (
         <div className="space-y-6">
@@ -52,16 +47,16 @@ export default function ProductInsights() {
           </div>
           <TableSkeleton rows={5} columns={5} />
         </div>
-      ) : (
-        <div className="space-y-2">
+      ) : !error && (
+        <div className="space-y-5">
           <GenericKPIRow items={kpis} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <TopProductsChart data={topByQuantity} />
             <TopRevenueChart data={topByRevenue} />
           </div>
 
-          <ProductRankingTable data={tableData} />
+          <ProductRankingTable data={tableData} maxHeight="24rem" />
         </div>
       )}
     </>

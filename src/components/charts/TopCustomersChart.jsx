@@ -21,12 +21,10 @@ const TOOLTIP_STYLE = {
   padding: "12px",
 };
 
-const BAR_COLORS = [
-  "#6B8DD6", "#7BA7C9", "#8E9CC3", "#A3A1D6", "#7BBFB5",
-  "#7DC4A5", "#C9AD7C", "#C49AB5", "#C49090", "#C4A07A",
-  "#7BC5D6", "#B49DD6", "#8DD0DB", "#A8C47E", "#D4B088",
-  "#CDA3D6", "#8DD4C4", "#D6CC7E", "#D6A0A0", "#A3A8D6",
-];
+const getBarColor = (index, total) => {
+  const opacity = 1 - (index / total) * 0.6;
+  return `rgba(59, 130, 246, ${opacity})`;
+};
 
 function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null;
@@ -88,8 +86,7 @@ export default function TopCustomersChart({ data }) {
             {data.map((_, i) => (
               <Cell
                 key={i}
-                fill={BAR_COLORS[i % BAR_COLORS.length]}
-                fillOpacity={0.8}
+                fill={getBarColor(i, data.length)}
               />
             ))}
             <LabelList

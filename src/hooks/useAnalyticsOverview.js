@@ -4,6 +4,8 @@ import {
   getMonthlyTrend,
   getDepartments,
   getSections,
+  fetchDepartamentos,
+  fetchSecciones,
 } from "../services/api";
 import { formatCurrency, formatNumber } from "../utils/formatters";
 import { DollarSign, ShoppingCart, Receipt, Users } from "lucide-react";
@@ -21,6 +23,8 @@ export default function useAnalyticsOverview(dateRange) {
   const [monthlyTrend, setMonthlyTrend] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [sections, setSections] = useState([]);
+  const [deptNameMap, setDeptNameMap] = useState({});
+  const [secNameMap, setSecNameMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -37,8 +41,10 @@ export default function useAnalyticsOverview(dateRange) {
       getMonthlyTrend(start, end),
       getDepartments(start, end),
       getSections(start, end),
+      fetchDepartamentos().catch(() => []),
+      fetchSecciones().catch(() => []),
     ])
-      .then(([sales, trend, deps, secs]) => {
+      .then(([sales, trend, deps, secs, deptConfig, secConfig]) => {
         if (cancelled) return;
         setSalesTotal(sales);
         setMonthlyTrend(
@@ -49,6 +55,19 @@ export default function useAnalyticsOverview(dateRange) {
         );
         setDepartments(deps.data || []);
         setSections(secs.data || []);
+
+        const dMap = {};
+        for (const d of deptConfig) {
+          dMap[String(d.id_departamento)] = d.nombre;
+        }
+        setDeptNameMap(dMap);
+
+        const sMap = {};
+        for (const s of secConfig) {
+          sMap[String(s.id_seccion)] = s.nombre;
+        }
+        setSecNameMap(sMap);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -63,12 +82,12 @@ export default function useAnalyticsOverview(dateRange) {
   const kpis = useMemo(() => {
     if (!salesTotal) return [];
     return [
-      { title: "Ventas Totales", value: "$ " + formatNumber(Math.round(salesTotal.total_sales)), icon: DollarSign, color: "#3B82F6" },
+      { title: "Ventas Totales", value: formatCurrency(salesTotal.total_sales), icon: DollarSign, color: "#3B82F6" },
       { title: "Total Pedidos", value: formatNumber(salesTotal.total_orders), icon: ShoppingCart, color: "#F59E0B" },
-      { title: "Valor Medio Pedido", value: "$ " + formatNumber(salesTotal.average_order_value, 2), icon: Receipt, color: "#8B5CF6" },
+      { title: "Valor Medio Pedido", value: formatCurrency(salesTotal.average_order_value), icon: Receipt, color: "#8B5CF6" },
       { title: "Total Clientes", value: formatNumber(salesTotal.total_clients), icon: Users, color: "#10B981" },
     ];
   }, [salesTotal]);
 
-  return { kpis, monthlyTrend, departments, sections, loading, error };
+  return { kpis, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error };
 }
