@@ -24,9 +24,11 @@ export default function PurchasePatternsPage() {
   const preview = useDatasetPreview(filters);
   const [currentStep, setCurrentStep] = useState(0);
   const [analysisRan, setAnalysisRan] = useState(false);
+  // Support is measured over all orders (most have a single product),
+  // so pair support is low; these defaults still yield rules on real data.
   const [analysisParams, setAnalysisParams] = useState({
-    support: 2,
-    confidence: 60,
+    support: 0.5,
+    confidence: 10,
     lift: 1.5,
   });
 

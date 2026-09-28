@@ -89,5 +89,7 @@ export default function useAnalyticsOverview(dateRange) {
     ];
   }, [salesTotal]);
 
-  return { kpis, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error };
+  const totalOrders = salesTotal?.total_orders;
+
+  return { kpis, totalOrders, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error };
 }

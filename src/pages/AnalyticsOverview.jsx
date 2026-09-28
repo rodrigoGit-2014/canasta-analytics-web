@@ -15,7 +15,7 @@ export default function AnalyticsOverview() {
     start: "2023-01-01",
     end: new Date().toISOString().split("T")[0],
   });
-  const { kpis, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error } =
+  const { kpis, totalOrders, monthlyTrend, departments, sections, deptNameMap, secNameMap, loading, error } =
     useAnalyticsOverview(dateRange);
 
   const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#EC4899", "#14B8A6", "#F97316"];
@@ -68,6 +68,10 @@ export default function AnalyticsOverview() {
               <DonutChart
                 title="Ventas por Departamento"
                 data={donutData}
+                footnote={
+                  totalOrders != null &&
+                  `Un pedido puede incluir varios departamentos · ${formatNumber(totalOrders)} pedidos en total`
+                }
               />
             </div>
           </div>

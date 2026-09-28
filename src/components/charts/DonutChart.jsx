@@ -61,7 +61,7 @@ function renderOuterLabel({ cx, cy, midAngle, outerRadius, value }) {
   );
 }
 
-export default function DonutChart({ data, title }) {
+export default function DonutChart({ data, title, footnote }) {
   const chartData = data.map((d, i) => ({
     ...d,
     color: d.color || COLORS[i % COLORS.length],
@@ -123,6 +123,10 @@ export default function DonutChart({ data, title }) {
           </div>
         ))}
       </div>
+
+      {footnote && (
+        <p className="mt-2 px-2 text-[10px] text-slate-500">{footnote}</p>
+      )}
     </ChartCard>
   );
 }
